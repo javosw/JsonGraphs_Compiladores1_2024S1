@@ -13,8 +13,6 @@ app
 		boton analisis/ejecucion
 			output: dashboard en una web page
 			////// aclarar: dashboard como paginas web que van a contener las distintas paginas que asi lo requieran
-			// por lo que entiendo:
-			// dashboard = conjunto de paginas, cada pagina tiene un grafico
 		mensajes de error de codigo
 		boton exportar <<<<<<<< pendiente
 	menu
@@ -26,42 +24,46 @@ app
 procesadores de lenguaje
 	paso 1:
 		input: lenguaje con estructuras de control 
-		output: lenguaje para graficos
+		output: lenguaje para dashboard
 	paso 2: 
-		input: lenguaje para graficos
+		input: lenguaje para dashboard
 		output: dashboard
 
 
 lenguaje para dashboard
 	inicia y termina con llaves
 	secciones del lenguaje
-		seccion configuracion
+		seccion para configuracion
 			sirve para configurar el dashboard
-		seccion graficos
+			// cada subestructura de esta seccion debe seguir la misma organizacion del ejemplo??
+		seccion para graficos
 			sirve para definir graficos
 			cada grafico tiene su propio lenguaje
 			cada grafico inicia y termina con llaves
-
-	{
-		"title": "Mi Página Web", // para dashboard
-		"description": "Una página web de ejemplo", // opcional
-		"keywords": ["página web", "ejemplo", "JSON"], // para "busqueda" <- definir como funciona la busqueda
-		"header": { "title": "Bienvenido a mi sitio web" }, // para pagina web
-		"footer": { "copyright": "© 2024" }, // para pagina web
-		"backgroundColor": "#f0f0f0", // predefinido: blanco hueso
-		"fontFamily": "Arial, sans-serif", 
-		"fontSize": "16px"
-
+	lexemas
+		mi_texto = á©-,
+		mi_color = #f0f0f0
+	ejemplo:
 		{
-			"data": [
-				{ "category": "A", "value": 30 },
-				{ "category": "B", "value": 50 },
-				{ "category": "C", "value": 20 },
-				{ "category": "D", "value": 45 },
-				{ "category": "E", "value": 60 }
-			]
+			"title": "Mi Página Web", // para dashboard
+			"description": "Una página web de ejemplo", // opcional
+			"keywords": ["página web", "ejemplo", "JSON"], // para "busqueda" <- definir como funciona la busqueda
+			"header": { "title": "Bienvenido a mi sitio web" }, // para pagina web
+			"footer": { "copyright": "© 2024" }, // para pagina web
+			"backgroundColor": "#f0f0f0", // predefinido: blanco hueso
+			"fontFamily": "Arial, sans-serif", 
+			"fontSize": "16px"
+
+			{
+				"data": [
+					{ "category": "A", "value": 30 },
+					{ "category": "B", "value": 50 },
+					{ "category": "C", "value": 20 },
+					{ "category": "D", "value": 45 },
+					{ "category": "E", "value": 60 }
+				]
+			}
 		}
-	}
 
 graficos
 	barras
@@ -231,15 +233,15 @@ graficos
 variables
 	tipo
 		entero
-			azid = 2;
+			id = 2;
 		decimal
-			azid = 45.6;
+			id = 45.6;
 		bool
-			azid = true;
+			id = true;
 		cadena
-			azid = "da45d65d";
+			id = "da45d65d";
 	lexema
-		[0-9a-zA-Z]*[iI][dD]
+		id = [0-9a-zA-Z]*[iI][dD]
 operaciones
 	entre entero y decimal
 		sintaxis
@@ -265,19 +267,19 @@ operaciones
 		>=
 flujo
 	// el contenido de estos flujos pueden tener porciones de graficas o graficas completas??
-	// se pueden anidar los flujos??
+	// es posible que se aniden los flujos??
+	// pueden ir varios else??
+	// es posible que se declaren variables dentro del las estructuras de control (a exepcion de while)??
 	if-else
-		if(...bool...) {...json...} else {...json...}
-		// se pueden declarar variables dentro del if-else??
-		// pueden ir if-else anidados??
-		// pueden ir varios else??
-		// nota: para resolver las dudas debo preguntar: el if-else es simple o complejo?
+		id = 3;
+		if(id==2) {...grafico...} else {...grafico...}
 	for
-		for ( id = 1; id <= 5; id++) {}
+		for ( id = 1; id <= 5; id++) {...grafico...}
 	while
-		while (valueId <= 64) {...grafico... valueId ++; }
+		id = 3;
+		while (id <= 64) { ...grafico... id++; }
 	do-while
-		do(){}while();
+		do{ ...grafico... id+=5; } while(id<=5);
 
 extras
 	graficos predefinidos

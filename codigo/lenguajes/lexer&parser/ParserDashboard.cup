@@ -1,0 +1,218 @@
+
+package josq.cms.lenguajes.automatas;
+
+// antes de la clase parser
+
+import java.util.ArrayList;
+//import java_cup.runtime.*;
+
+// NOTA: %cupsym en jflex
+// parser=MyParser, sym=MyParserSym
+class ParserDashboard;
+
+// dentro de la clase parser
+// parser code {: :}
+
+// metodo user_init() de la clase parser generada
+// init with {: :}
+
+// metodo scan() de la clase parser generada
+// scan with {: :}
+
+// dentro de la clase action
+action code {:
+    void print(String texto){ System.out.print(texto); } 
+:}
+
+// #%#%#%#% SIMBOLOS #%#%#%#%
+// terminal [Type2] mySymbol1, mySymbol2 ;
+// non terminal [Type2] mySymbol1, mySymbol2 ;
+
+// #%#%#%#% TERMINALES #%#%#%#%
+
+terminal ;
+terminal ;
+terminal ;
+terminal ;
+
+// #%#%#%#% NO TERMINALES #%#%#%#%
+non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+
+// PRODUCCIONES
+
+// definicion de la produccion inicial
+start with dashboard ;
+
+dashboard ::=
+    IZQCORCH properties graficos DERCORCH
+    | error DERCORCH
+;
+
+properties ::= propertyList property
+;
+
+propertyList ::=
+    property COMA
+    | propertyList property COMA
+;
+
+property ::= 
+    title
+    | description
+    | keywords
+    | header
+    | footer
+    | backgr
+    | fontFam
+    | fontSize
+;
+
+// MI_TEXTO = "Mi Página Web"
+
+// KD_TITLE = "title": 
+title ::= KD_TITLE MI_TEXTO
+;
+// KD_DESCRIP = "description": 
+description ::= KD_DESCRIP MI_TEXTO
+;
+// KD_KEYWORDS = "keywords":
+keywords ::= KD_KEYWORDS IZQCORCH keywordList DERCORCH
+;
+
+// keywordList = "página web", "ejemplo", "JSON"
+keywordList ::=
+    /* epsilon */
+    | MI_TEXTO
+    | keywordList2 MI_TEXTO
+;
+
+keywordList2 ::=
+    MI_TEXTO COMA
+    | keywordList2 MI_TEXTO COMA
+;
+
+// KD_HEADER = "header":
+header ::= KD_HEADER IZQLLAVE title DERLLAVE
+;
+
+// KD_FOOTER = "footer":
+footer ::= KD_FOOTER IZQLLAVE copyright DERLLAVE
+;
+
+// KD_COPYR = "copyright":
+copyright ::= KD_COPYR MI_TEXTO
+;
+
+// KD_BACKGR = "backgroundColor":
+backgr ::= KD_BACKGR MI_COLOR
+;
+// KD_FONTFAM = "fontFamily":
+fontFam ::= KD_FONTFAM MI_TEXTO
+;
+// KD_FONTSIZE = "fontSize":
+fontSize ::= KD_FONTSIZE MI_TEXTO
+;
+
+graficos ::=
+    grafico
+    | graficos grafico
+;
+
+grafico ::=
+    grBarras
+    | grPastel
+    | grPuntos
+    | grLineas
+    | grTarjetas
+;
+
+grBarras ::=
+    barras
+    | barrasXT
+;
+barras ::=
+    IZQLLAVE barrasData DERLLAVE
+;
+// KD_DATA = "data":
+barrasData ::= KD_DATA IZQCORCH barrasValueList DERCORCH
+;
+
+barrasValueList ::= 
+    barrasValue
+    | barrasValueList2 barrasValue
+;
+
+barrasValueList2 ::=
+    barrasValue COMA
+    | barrasValueList2 barrasValue COMA
+;
+
+barrasValue ::=
+    IZQLLAVE category COMA value DERLLAVE
+;
+
+// KD_CATEGORY = "category":
+category ::= KD_CATEGORY MI_TEXTO
+;
+
+// KD_VALUE = "value":
+value ::= KD_VALUE MI_INTEGER
+;
+
+// MI_INTEGER = 31
+
+barrasXT ::= IZQLLAVE barrasXTData COMA barrasXTChart DERLLAVE 
+;
+
+barrasXTData ::= KD_DATA IZQCORCH barrasXTValueList DERCORCH
+;
+
+barrasXTValueList ::= 
+    barrasXTValue
+    | barrasXTValueList2 barrasXTValue
+;
+
+barrasXTValueList2 ::=
+    barrasXTValue COMA
+    | barrasXTValueList2 barrasXTValue COMA
+;
+
+barrasXTValue ::=
+    IZQLLAVE category COMA value COMA color DERLLAVE
+;
+
+// KD_COLOR = "color":
+color ::= KD_COLOR MI_COLOR
+;
+
+barrasXTChart ::=  IZQLLAVE title COMA xLabel COMA yLabel DERLLAVE
+;
+// KD_XLABEL = "xAxisLabel":
+xLabel ::= KD_XLABEL MI_TEXTO
+;
+// KD_YLABEL = "yAxisLabel":
+yLabel ::= KD_YLABEL MI_TEXTO
+;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
