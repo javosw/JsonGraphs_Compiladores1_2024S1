@@ -1,5 +1,5 @@
 
-package josq.cms.lenguajes.automatas;
+package josq.lenguajes.automatas;
 
 // antes de la clase parser
 
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 // NOTA: %cupsym en jflex
 // parser=MyParser, sym=MyParserSym
-class ParserDashboard;
+class ParserDashB;
 
 // dentro de la clase parser
 // parser code {: :}
@@ -30,10 +30,44 @@ action code {:
 
 // #%#%#%#% TERMINALES #%#%#%#%
 
-terminal ;
-terminal ;
-terminal ;
-terminal ;
+terminal MI_TEXTO ;
+terminal KD_ICON ;
+terminal KD_LINK ;
+terminal MI_URL ;
+terminal MI_INTEGER ;
+terminal MI_COLOR ;
+
+terminal IZQLLAVE ;
+terminal DERLLAVE ;
+terminal IZQCORCH ;
+terminal DERCORCH ;
+terminal COMA ;
+
+terminal KD_DATA ;
+terminal KD_CHART ;
+terminal KD_LABEL ;
+terminal KD_TITLE ;
+terminal KD_DESCRIP ;
+terminal KD_COPYR ;
+terminal KD_BACKGR ;
+terminal KD_FONTFAM ;
+terminal KD_FONTSIZE ;
+terminal KD_CATEGORY ;
+terminal KD_VALUE ;
+terminal KD_COLOR ;
+terminal KD_XLABEL ;
+terminal KD_YLABEL ;
+terminal KD_LEGEND ;
+terminal KD_X ;
+terminal KD_Y ;
+terminal KD_SIZE ;
+terminal KD_HEADER ;
+terminal KD_FOOTER ;
+terminal KD_CHART ;
+terminal KD_KEYWORDS ;
+terminal KD_PONTS ;
+terminal KD_PONTS ;
+
 
 // #%#%#%#% NO TERMINALES #%#%#%#%
 non terminal ;
@@ -45,6 +79,90 @@ non terminal ;
 non terminal ;
 non terminal ;
 
+non terminal dashboard ;
+non terminal properties ;
+non terminal property ;
+non terminal propertyList ;
+non terminal graficos ;
+non terminal grafico ;
+non terminal barras ;
+non terminal barrasData ;
+non terminal barrasDataList ;
+non terminal barrasDataValue ;
+non terminal barrasDataList2 ;
+non terminal barrasXt ;
+non terminal barrasXtData ;
+non terminal barrasXtDataList ;
+non terminal barrasXtDataList2 ;
+non terminal barrasXtDataValue ;
+non terminal pastel ;
+non terminal pastelData ;
+non terminal pastelDataList ;
+non terminal pastelDataList2 ;
+non terminal pastelDataValue ;
+non terminal pastelXt ;
+non terminal pastelXtData ;
+non terminal pastelXtDataList ;
+non terminal pastelXtDataList2 ;
+non terminal pastelXtDataValue ;
+non terminal pastelXtChart ;
+non terminal puntos ;
+non terminal puntosData ;
+non terminal puntosDataList ;
+non terminal puntosDataList2 ;
+non terminal puntosDataValue ;
+non terminal puntosXt ;
+non terminal puntosXtData ;
+non terminal puntosXtDataList ;
+non terminal puntosXtDataList2 ;
+non terminal puntosXtDataValue ;
+non terminal lineas ;
+non terminal lineasData ;
+non terminal lineasDataList ;
+non terminal lineasDataValue ;
+non terminal lineasDataList2 ;
+non terminal lineasXt ;
+non terminal lineasXtData ;
+non terminal lineasXtDataList ;
+non terminal lineasXtDataValue ;
+non terminal lineasXtDataList2 ;
+non terminal tarjeta ;
+non terminal tarjetaData ;
+non terminal tarjetaXt ;
+non terminal label ;
+non terminal icon ;
+non terminal link ;
+non terminal title ;
+non terminal description ;
+non terminal copyright ;
+non terminal backgr ;
+non terminal fontFam ;
+non terminal fontSize ;
+non terminal category ;
+non terminal value ;
+non terminal color ;
+non terminal xLabel ;
+non terminal yLabel ;
+non terminal legend ;
+non terminal xValue ;
+non terminal yValue ;
+non terminal size ;
+non terminal header ;
+non terminal footer ;
+non terminal chart ;
+non terminal keywords ;
+non terminal keywordList ;
+non terminal keywordList2 ;
+non terminal points ;
+non terminal pointList ;
+non terminal pointValue ;
+non terminal pointList2 ;
+non terminal pointsXt ;
+non terminal pointXtList ;
+non terminal pointXtList2 ;
+non terminal pointXtValue ;
+
+
 // PRODUCCIONES
 
 // definicion de la produccion inicial
@@ -53,7 +171,6 @@ start with dashboard ;
 dashboard ::=
     IZQLLAVE properties graficos DERLLAVE
 ;
-
 
 // PROPERTIES >>>>>>>>>>>>>>>>>>>
 properties ::= 
@@ -75,13 +192,11 @@ propertyList ::=
     | propertyList property COMA
 ;
 
-
 // GRAFICOS >>>>>>>>>>>>>>>>>>>
 graficos ::=
     grafico
     | graficos grafico
 ;
-
 grafico ::=
     barras
     barrasXt
@@ -96,12 +211,10 @@ grafico ::=
 ;
 
 // BARRAS >>>>>>>>>>>>>>>>>>>
-
-// BARRAS.SIMPLE
+// barras
 barras ::=
     IZQLLAVE barrasData DERLLAVE
 ;
-// KD_DATA = "data":
 barrasData ::= KD_DATA IZQCORCH barrasDataList DERCORCH
 ;
 barrasDataList ::= 
@@ -115,50 +228,40 @@ barrasDataList2 ::=
     barrasDataValue COMA
     | barrasDataList2 barrasDataValue COMA
 ;
-
-// BARRAS.Xt
+// barrasXt
 barrasXt ::= IZQLLAVE barrasXtData COMA chart DERLLAVE 
 ;
-
 barrasXtData ::= KD_DATA IZQCORCH barrasXtDataList DERCORCH
 ;
-
 barrasXtDataList ::= 
     barrasXtDataValue
     | barrasXtDataList2 barrasXtDataValue
 ;
-
+barrasXtDataValue ::=
+    IZQLLAVE category COMA value COMA color DERLLAVE
+;
 barrasXtDataList2 ::=
     barrasXtDataValue COMA
     | barrasXtDataList2 barrasXtDataValue COMA
 ;
 
-barrasXtDataValue ::=
-    IZQLLAVE category COMA value COMA color DERLLAVE
-;
-
 // PASTEL >>>>>>>>>>>>>>>>>>>
-
-// PASTEL.SIMPLE
+// pastel
 pastel ::= IZQLLAVE pastelData DERLLAVE
 ;
 pastelData ::= KD_DATA IZQCORCH pastelDataList DERCORCH
 ;
-
 pastelDataList ::= 
     pastelDataValue
     | pastelDataList2 pastelDataValue
 ;
-
+pastelDataValue ::= IZQLLAVE label COMA value DERLLAVE
+;
 pastelDataList2 ::=
     pastelDataValue COMA
     | pastelDataList2 pastelDataValue COMA
 ;
-
-pastelDataValue ::= IZQLLAVE label COMA value DERLLAVE
-;
-
-// PASTEL.Xt
+// pastelXt
 pastelXt ::= IZQLLAVE pastelXtData COMA pastelXtChart DERLLAVE
 ;
 pastelXtData ::= KD_DATA IZQCORCH pastelXtDataList DERCORCH
@@ -167,18 +270,15 @@ pastelXtDataList ::=
     pastelXtDataValue 
     | pastelXtDataList2 pastelXtDataValue
 ;
+pastelXtDataValue ::= IZQLLAVE label COMA value COMA color DERLLAVE
+;
 pastelXtDataList2 ::=
     pastelXtDataValue COMA
     | pastelXtDataList2 pastelXtDataValue COMA
 ;
-pastelXtDataValue ::= IZQLLAVE label COMA value COMA color DERLLAVE
-;
-pastelXtChart ::= KD_CHART IZQLLAVE title COMA legend DERLLAVE
-;
 
 // PUNTOS >>>>>>>>>>>>>>>>>>>
-
-// PUNTOS.SIMPLE
+// puntos
 puntos ::= IZQLLAVE puntosData DERLLAVE
 ;
 puntosData ::= KD_DATA IZQCORCH puntosDataList DERCORCH
@@ -187,14 +287,13 @@ puntosDataList ::=
     puntosDataValue 
     | puntosDataList2 puntosDataValue
 ;
+puntosDataValue ::= IZQLLAVE xValue COMA yValue DERLLAVE 
+;
 puntosDataList2 ::=
     puntosDataValue COMA
     puntosDataList2 puntosDataValue COMA
 ;
-puntosDataValue ::= IZQLLAVE xValue COMA yValue DERLLAVE 
-;
-
-// PUNTOS.Xt
+// puntosXt
 puntosXt ::= IZQLLAVE puntosXtData COMA chart DERLLAVE
 ;
 puntosXtData ::= KD_DATA IZQCORCH puntosXtDataList DERCORCH
@@ -203,16 +302,15 @@ puntosXtDataList ::=
     puntosXtDataValue
     | puntosXtDataList2 puntosXtDataValue
 ;
+puntosXtDataValue ::= IZQLLAVE xValue COMA yValue COMA size COMA color DERLLAVE
+;
 puntosXtDataList2 ::= 
     puntosXtDataValue COMA
     | puntosXtDataList2 puntosXtDataValue COMA
 ;
-puntosXtDataValue ::= IZQLLAVE xValue COMA yValue COMA size COMA color DERLLAVE
-;
 
 // LINEAS >>>>>>>>>>>>>>>>>>>
-
-// LINEAS.SIMPLE
+// lineas
 lineas ::= IZQLLAVE lineasData COMA chart DERLLAVE 
 ;
 lineasData ::= KD_DATA IZQCORCH lineasDataList DERCORCH
@@ -227,20 +325,7 @@ lineasDataList2 ::=
     lineasDataValue COMA
     | lineasDataList2 lineasDataValue COMA
 ;
-points ::= KD_PONTS IZQCORCH pointList DERCORCH
-;
-pointList ::= 
-    pointValue 
-    | pointList2 pointValue
-;
-pointValue ::= IZQLLAVE xValue COMA yValue DERLLAVE
-;
-pointList2 ::=
-    pointValue COMA
-    | pointList2 pointValue COMA
-;
-
-// LINEAS.Xt
+// lineasXt
 lineasXt ::= IZQLLAVE lineasXtData COMA chart DERLLAVE 
 ;
 lineasXtData ::= KD_DATA IZQCORCH lineasXtDataList DERCORCH
@@ -255,21 +340,8 @@ lineasXtDataList2 ::=
     lineasXtDataValue COMA
     | lineasXtDataList2 lineasXtDataValue COMA
 ;
-pointsXt ::= KD_PONTS IZQCORCH pointXtList DERCORCH
-;
-pointXtList ::= 
-    pointXtValue 
-    | pointXtList2 pointXtValue
-;
-pointXtList2 ::=
-    pointXtValue COMA
-    | pointXtList2 pointXtValue COMA
-;
-pointXtValue ::= IZQLLAVE xValue COMA yValue COMA label DERLLAVE
-;
 
 // TARJETA >>>>>>>>>>>>>>>>>>>
-
 tarjeta ::= IZQLLAVE tarjetaData DERLLAVE
 ;
 tarjetaData ::= KD_DATA IZQLLAVE value COMA label COMA description DERLLAVE
@@ -282,21 +354,7 @@ tarjetaXt ::= KD_DATA IZQLLAVE value COMA label COMA description COMA icon COMA 
 
 // KD_PONTS = "points":
 // KD_LINE_STY = "lineStyle":
-
-
-// KD_KEYWORDS = "keywords":
-keywords ::= KD_KEYWORDS IZQCORCH keywordList DERCORCH
-;
-// keywordList = "página web", "ejemplo", "JSON"
-keywordList ::=
-    /* epsilon */
-    | MI_TEXTO
-    | keywordList2 MI_TEXTO
-;
-keywordList2 ::=
-    MI_TEXTO COMA
-    | keywordList2 MI_TEXTO COMA
-;
+// KD_DATA = "data":
 
 // MI_INTEGER = 31
 // MI_TEXTO = "Mi Página Web"
@@ -304,8 +362,10 @@ keywordList2 ::=
 // KD_LABEL = "label":
 label ::= KD_LABEL MI_TEXTO
 ;
+// KD_ICON = "icon":
 icon ::= KD_ICON MI_TEXTO
 ;
+// KD_LINK = "link":
 link ::= KD_LINK MI_URL
 ;
 // KD_TITLE = "title": 
@@ -313,12 +373,6 @@ title ::= KD_TITLE MI_TEXTO
 ;
 // KD_DESCRIP = "description": 
 description ::= KD_DESCRIP MI_TEXTO
-;
-// KD_HEADER = "header":
-header ::= KD_HEADER IZQLLAVE title DERLLAVE
-;
-// KD_FOOTER = "footer":
-footer ::= KD_FOOTER IZQLLAVE copyright DERLLAVE
 ;
 // KD_COPYR = "copyright":
 copyright ::= KD_COPYR MI_TEXTO
@@ -341,9 +395,6 @@ value ::= KD_VALUE MI_INTEGER
 // KD_COLOR = "color":
 color ::= KD_COLOR MI_COLOR
 ;
-// KD_CHART = "chart":
-chart ::= KD_CHART IZQLLAVE title COMA xLabel COMA yLabel DERLLAVE
-;
 // KD_XLABEL = "xAxisLabel":
 xLabel ::= KD_XLABEL MI_TEXTO
 ;
@@ -354,13 +405,65 @@ yLabel ::= KD_YLABEL MI_TEXTO
 legend ::= KD_LEGEND MI_TEXTO
 ;
 // KD_X = "x":
-// KD_Y = "y":
 xValue ::= KD_X MI_INTEGER
 ;
+// KD_Y = "y":
 yValue ::= KD_Y MI_INTEGER
 ;
 // KD_SIZE = "size":
 size ::= KD_SIZE MI_INTEGER
 ;
 
+// KD_HEADER = "header":
+header ::= KD_HEADER IZQLLAVE title DERLLAVE
+;
+// KD_FOOTER = "footer":
+footer ::= KD_FOOTER IZQLLAVE copyright DERLLAVE
+;
+// KD_CHART = "chart":
+chart ::= KD_CHART IZQLLAVE title COMA xLabel COMA yLabel DERLLAVE
+;
+pastelXtChart ::= KD_CHART IZQLLAVE title COMA legend DERLLAVE
+;
 
+// usado en properties
+// KD_KEYWORDS = "keywords":
+keywords ::= KD_KEYWORDS IZQCORCH keywordList DERCORCH
+;
+// keywordList = "página web", "ejemplo", "JSON"
+keywordList ::=
+    /* epsilon */
+    | MI_TEXTO
+    | keywordList2 MI_TEXTO
+;
+keywordList2 ::=
+    MI_TEXTO COMA
+    | keywordList2 MI_TEXTO COMA
+;
+
+// usado en lineas
+points ::= KD_PONTS IZQCORCH pointList DERCORCH
+;
+pointList ::= 
+    pointValue 
+    | pointList2 pointValue
+;
+pointValue ::= IZQLLAVE xValue COMA yValue DERLLAVE
+;
+pointList2 ::=
+    pointValue COMA
+    | pointList2 pointValue COMA
+;
+// usado en lineasXt
+pointsXt ::= KD_PONTS IZQCORCH pointXtList DERCORCH
+;
+pointXtList ::= 
+    pointXtValue 
+    | pointXtList2 pointXtValue
+;
+pointXtList2 ::=
+    pointXtValue COMA
+    | pointXtList2 pointXtValue COMA
+;
+pointXtValue ::= IZQLLAVE xValue COMA yValue COMA label DERLLAVE
+;
