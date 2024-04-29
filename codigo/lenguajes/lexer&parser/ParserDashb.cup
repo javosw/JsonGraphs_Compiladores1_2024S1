@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 // NOTA: %cupsym en jflex
 // parser=MyParser, sym=MyParserSym
-class ParserDashB;
+class ParserDashb;
 
 // dentro de la clase parser
 // parser code {: :}
@@ -31,8 +31,6 @@ action code {:
 // #%#%#%#% TERMINALES #%#%#%#%
 
 terminal MI_TEXTO ;
-terminal KD_ICON ;
-terminal KD_LINK ;
 terminal MI_URL ;
 terminal MI_INTEGER ;
 terminal MI_COLOR ;
@@ -55,6 +53,8 @@ terminal KD_FONTSIZE ;
 terminal KD_CATEGORY ;
 terminal KD_VALUE ;
 terminal KD_COLOR ;
+terminal KD_ICON ;
+terminal KD_LINK ;
 terminal KD_XLABEL ;
 terminal KD_YLABEL ;
 terminal KD_LEGEND ;
