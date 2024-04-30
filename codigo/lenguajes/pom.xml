@@ -37,7 +37,7 @@
                         </goals>
                         <configuration>
                             <lexDefinitions>
-                                <lexDefinition>lexer&amp;parser</lexDefinition>
+                                <lexDefinition>../lexer&amp;parser</lexDefinition>
                             </lexDefinitions>
                             <outputDirectory>src/main/java/</outputDirectory>
                         </configuration>
@@ -58,7 +58,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <cupDefinition>lexer&amp;parser</cupDefinition>
+                    <cupDefinition>../lexer&amp;parser</cupDefinition>
                     <outputDirectory>src/main/java/</outputDirectory> 
                     <noPositions>false</noPositions>
                     <locations>false</locations>

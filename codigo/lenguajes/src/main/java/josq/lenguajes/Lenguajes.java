@@ -4,6 +4,8 @@
 
 package josq.lenguajes;
 
+import josq.lenguajes.automatas.Automata;
+
 /**
  *
  * @author JavierOswaldo
@@ -11,6 +13,23 @@ package josq.lenguajes;
 public class Lenguajes {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        leerDashb();
     }
+    
+    
+    static void leerDashb()
+    {
+        String ruta = "C:\\DASHB\\test1.json";
+        
+        try
+        {            
+            Automata.getDashbDesdeArchivo(ruta);
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        
+        
+    } 
 }

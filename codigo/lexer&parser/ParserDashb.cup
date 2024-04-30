@@ -21,7 +21,7 @@ class ParserDashb;
 
 // dentro de la clase action
 action code {:
-    void print(String teXto){ System.out.print(teXto); } 
+    private void print(String texto){ System.out.print(texto); } 
 :}
 
 // #%#%#%#% SIMBOLOS #%#%#%#%
@@ -190,15 +190,16 @@ graficos ::=
 ;
 grafico ::=
     barras
-    barrasXt
-    pastel
-    pastelXt
-    puntos
-    puntosXt
-    lineas
-    lineasXt
-    tarjeta
-    tarjetaXt
+    | barrasXt
+    | pastel
+    | pastelXt
+    | puntos
+    | puntosXt
+    | lineas
+    | lineasXt
+    | tarjeta
+    | tarjetaXt
+    | error DERLLAVE
 ;
 
 // BARRAS >>>>>>>>>>>>>>>>>>>
@@ -282,7 +283,7 @@ puntosDataValue ::= IZQLLAVE xValue COMA yValue DERLLAVE
 ;
 puntosDataList2 ::=
     puntosDataValue COMA
-    puntosDataList2 puntosDataValue COMA
+    | puntosDataList2 puntosDataValue COMA
 ;
 // puntosXt
 puntosXt ::= IZQLLAVE puntosXtData COMA chart DERLLAVE
