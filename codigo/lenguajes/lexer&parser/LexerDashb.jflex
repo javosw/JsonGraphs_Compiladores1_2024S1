@@ -1,7 +1,7 @@
 // meta characters:  |  (  )  {  }  [  ]  < >  \  .  *  +  ?  ^  $  / . " ~ !
 
 // codigo antes de la clase lexer
-package josq.cms.lenguajes.automatas;
+package josq.lenguajes.automatas;
 
 import java.io.Reader;
 
@@ -48,45 +48,44 @@ import java_cup.runtime.DefaultSymbolFactory;
         return mySymbol;
     }
 
+    public class Punto
+    {
+        public int yycolumn;
+        public int yyline;
+        public int yylength;
+        public int yychar;
+
+        public Punto(int yycolumn, int yyline, int yylength, int yychar)
+        {
+            this.yycolumn = yycolumn;
+            this.yyline = yyline;
+            this.yylength = yylength;
+            this.yychar = yychar;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "line="+yyline+",col="+yycolumn+",leng="+yylength+",char="+yychar;
+        }
+        
+        public String getValues()
+        {
+            return "y="+yyline+",x="+yycolumn+",l="+yylength+",c="+yychar;
+        }
+    }
+
+    public Punto getPuntoActual(){ return new Punto(yycolumn, yyline, yylength(), (int)yychar+1); };
+
     // para errores lexicos
-    public Punto getPunto(){ return new Punto(yycolumn, yyline, yylength(), (int)yychar+1); };
-    StringBuilder log(String text) 
-    {
-        EjecutarAcciones.logSintaxis.append(text); 
-        return EjecutarAcciones.logSintaxis; 
-    }
+    private StringBuilder log = new StringBuilder();
+    private StringBuilder log(String text) { return log.append(text); }
+
     
-    // para manejo de contextos lexicos
-    private boolean accioncEsInpar = false;
-    private boolean parametroEsInpar = false;
-    private boolean atributoEsInpar = false;
-
-    private void setContextoDe(int sym)
-    {
-        if(sym == ParserAccionesSym.ACCI)
-        { 
-            if (accioncEsInpar) { yybegin(YYINITIAL); }
-            else { yybegin(MI_ACCION); }
-            accioncEsInpar = !accioncEsInpar;
-        }
-        else if(sym == ParserAccionesSym.PARAM)
-        { 
-            if (parametroEsInpar) { yybegin(YYINITIAL); }
-            else { yybegin(MI_PARAMETRO); }
-            parametroEsInpar = !parametroEsInpar;
-        }
-        else if(sym == ParserAccionesSym.ATRIB)
-        { 
-            if (atributoEsInpar) { yybegin(YYINITIAL); }
-            else { yybegin(MI_ATRIBUTO); }
-            atributoEsInpar = !atributoEsInpar;
-        }
-    }
-
     /*
     ComplexSymbolFactory myFactory = null;
 
-    public LexerAcciones(Reader in, ComplexSymbolFactory sf) { this(in); myFactory = sf; }
+    public Lexer(Reader in, ComplexSymbolFactory sf) { this(in); myFactory = sf; }
 
     private Symbol symbol(String name, int sym) {
         Location izq = new Location(yyline+1, yycolumn+1, (int)yychar);
@@ -104,12 +103,6 @@ import java_cup.runtime.DefaultSymbolFactory;
 
 // estados lexicos
 //%xstate CONTEXTO_1
-%state MI_ACCION, MI_PARAMETRO, MI_ATRIBUTO
-%state MI_ID, MI_ID_USER
-%state MI_NUMERO
-%state MI_TEXTO, MI_TITULO, MI_ETIQUETA, MIS_ETIQUETAS
-%state MI_COLOR, MI_FECHA, MI_URL
-%state UI_WEB, MI_ALIGN
 
 // macros para regex
 
@@ -117,15 +110,16 @@ import java_cup.runtime.DefaultSymbolFactory;
 _v   =  \r|\n|\r\n
 // invisible horizontal
 _h   =  [ \t\f]
-__   =  {_v} | {_h}
+__   =  {_v}|{_h}
 
-miChar = [0-9a-zA-Z]
+miChar = [0-9a-zA-ZáéíóúñÁÉÍÓÚÑ]
 miTexto = \"({__}|{miChar})+\"
 //miTextoXt
 //miURL
-miColor =  #[0-9a-fA-F]{6}
+
+miColor =  \"{__}#[0-9a-fA-F]{6}{__}\"
 miInteger = [0-9]+
-miURL = [0-9a-zA-Z\:\.\/\?\=]+
+miURL = \"{__}*[0-9a-zA-Z\:\.\/\?\=]+{__}*\"
 
 points = \"{__}"points"{__}\"{__}\: 
 lineStyle = \"{__}"lineStyle"{__}\"{__}\: 
@@ -152,11 +146,7 @@ header = \"{__}"header"{__}\"{__}\:
 footer = \"{__}"footer"{__}\"{__}\: 
 chart = \"{__}"chart"{__}\"{__}\: 
 keywords = \"{__}"keywords"{__}\"{__}\: 
-
-
-
-
-
+name = \"{__}"name"{__}\"{__}\:
 
 %%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%
@@ -164,47 +154,49 @@ keywords = \"{__}"keywords"{__}\"{__}\:
 
 <YYINITIAL> {
 
-{points}               {}
-{lineStyle}            {}
-{data}                 {}
-{link}                 {}
-{backgroundColor}      {}
-{value}                {}
-{color}                {}
-{x}                    {}
-{y}                    {}
-{size}                 {}
-{header}               {}
-{footer}               {}
-{chart}                {}
+{data}                 { return symbol("",ParserDashbSym.KD_DATA); }
+{points}               { return symbol("",ParserDashbSym.KD_PONTS); }
+{lineStyle}            { return symbol("",ParserDashbSym.KD_LINE); }
+{link}                 { return symbol("",ParserDashbSym.KD_LINK); }
+{backgroundColor}      { return symbol("",ParserDashbSym.KD_BACKGR); }
+{value}                { return symbol("",ParserDashbSym.KD_VALUE); }
+{color}                { return symbol("",ParserDashbSym.KD_COLOR); }
+{x}                    { return symbol("",ParserDashbSym.KD_X); }
+{y}                    { return symbol("",ParserDashbSym.KD_Y); }
+{size}                 { return symbol("",ParserDashbSym.KD_SIZE); }
+{header}               { return symbol("",ParserDashbSym.KD_HEADER); }
+{footer}               { return symbol("",ParserDashbSym.KD_FOOTER); }
+{chart}                { return symbol("",ParserDashbSym.KD_CHART); }
 
-{label}                {yybegin();}
-{icon}                 {yybegin();}
-{title}                {yybegin();}
-{description}          {yybegin();}
-{copyright}            {yybegin();}
-{fontFamily}           {yybegin();}
-{fontSize}             {yybegin();}
-{category}             {yybegin();}
-{xAxisLabel}           {yybegin();}
-{yAxisLabel}           {yybegin();}
-{legendPosition}       {yybegin();}
-{keywords}             {yybegin();}
+{label}                { return symbol("",ParserDashbSym.KD_LABEL); }
+{icon}                 { return symbol("",ParserDashbSym.KD_ICON); }
+{title}                { return symbol("",ParserDashbSym.KD_TITLE); }
+{description}          { return symbol("",ParserDashbSym.KD_DESCRIP); }
+{copyright}            { return symbol("",ParserDashbSym.KD_COPYR); }
+{fontFamily}           { return symbol("",ParserDashbSym.KD_FONTFAM); }
+{fontSize}             { return symbol("",ParserDashbSym.KD_FONTSIZE); }
+{category}             { return symbol("",ParserDashbSym.KD_CATEGORY); }
+{xAxisLabel}           { return symbol("",ParserDashbSym.KD_XLABEL); }
+{yAxisLabel}           { return symbol("",ParserDashbSym.KD_YLABEL); }
+{legendPosition}       { return symbol("",ParserDashbSym.KD_LEGEND); }
+{keywords}             { return symbol("",ParserDashbSym.KD_KEYWORDS); }
+{name}                 { return symbol("",ParserDashbSym.KD_NAME); }
 
-{miInteger}
-{miColor} 
-{miURL} 
-{miTexto}              {}
-
-}
-
-<LX_TEXTO>{
+{miInteger}            { return symbol("",ParserDashbSym.MI_INTEGER); }
+{miColor}              { return symbol("",ParserDashbSym.MI_COLOR); }
+{miURL}                { return symbol("",ParserDashbSym.MI_URL); }
+{miTexto}              { return symbol("",ParserDashbSym.MI_TEXTO); }
 
 }
 
-
+"{"  { return symbol("",ParserDashbSym.IZQLLAVE); }
+"}"  { return symbol("",ParserDashbSym.DERLLAVE); }
+"["  { return symbol("",ParserDashbSym.IZQCORCH); }
+"]"  { return symbol("",ParserDashbSym.DERCORCH); }
+","  { return symbol("",ParserDashbSym.COMA); }
 
 // ignorados
-
+{__} {}
 // error
-[^]  { log("@lexer: ").append(getPunto().toString()).append("\n"); return symbol("",ParserAccionesSym.error); }
+[^]  { log("@lexer: ").append(getPuntoActual().toString()).append("\n"); return symbol("",ParserDashbSym.error); }
+

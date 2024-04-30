@@ -63,21 +63,12 @@ terminal KD_Y ;
 terminal KD_SIZE ;
 terminal KD_HEADER ;
 terminal KD_FOOTER ;
-terminal KD_CHART ;
 terminal KD_KEYWORDS ;
 terminal KD_PONTS ;
-terminal KD_PONTS ;
-
+terminal KD_LINE ;
+terminal KD_NAME ;
 
 // #%#%#%#% NO TERMINALES #%#%#%#%
-non terminal ;
-non terminal ;
-non terminal ;
-non terminal ;
-non terminal ;
-non terminal ;
-non terminal ;
-non terminal ;
 
 non terminal dashboard ;
 non terminal properties ;
@@ -161,8 +152,8 @@ non terminal pointsXt ;
 non terminal pointXtList ;
 non terminal pointXtList2 ;
 non terminal pointXtValue ;
-
-
+non terminal lineStyle ; 
+non terminal name ;
 // PRODUCCIONES
 
 // definicion de la produccion inicial
@@ -352,13 +343,19 @@ tarjetaXt ::= KD_DATA IZQLLAVE value COMA label COMA description COMA icon COMA 
 
 // CASI TERMINALES
 
-// KD_PONTS = "points":
-// KD_LINE_STY = "lineStyle":
 // KD_DATA = "data":
 
 // MI_INTEGER = 31
+// MI_COLOR = "#33ff57"
+// MI_URL = "https://example.com/more-info"
 // MI_TEXTO = "Mi Página Web"
 
+// KD_LINE = "lineStyle":
+lineStyle ::= KD_LINE MI_TEXTO
+;
+// KD_NAME = "name":
+name ::= KD_NAME MI_TEXTO
+;
 // KD_LABEL = "label":
 label ::= KD_LABEL MI_TEXTO
 ;
@@ -442,6 +439,7 @@ keywordList2 ::=
 ;
 
 // usado en lineas
+// KD_PONTS = "points":
 points ::= KD_PONTS IZQCORCH pointList DERCORCH
 ;
 pointList ::= 
