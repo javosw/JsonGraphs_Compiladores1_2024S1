@@ -1,0 +1,287 @@
+diccionario
+	dashboard:
+		a graphical report of various data relevant to a particular business, group, etc
+
+
+app
+	es un "ide" para generar dashboards
+	puede tener varias pestañas
+	cada pestaña
+		debe tener un editor de texto
+			dicho editor sirve para escribir el codigo del <<grafico>>
+			guardado automatico: no debe tener boton para guardar el documento 
+		boton analisis/ejecucion
+			output: dashboard en una web page
+		mensajes de error de codigo
+		boton exportar <<<<<<<< pendiente
+	menu
+		abrir documento existente
+		crear nuevo documento
+			el documento es un archivo con extension .gh
+			paso: abrir dialogo para nombrar dicho archivo
+
+procesadores de lenguaje
+	paso 1:
+		input: lenguaje con estructuras de control 
+		output: lenguaje para dashboard
+	paso 2: 
+		input: lenguaje para dashboard
+		output: dashboard
+
+
+lenguaje para dashboard
+	inicia y termina con llaves
+	secciones del lenguaje
+		seccion para configuracion
+			sirve para configurar el dashboard
+			// aclaracion2
+		seccion para graficos
+			sirve para definir graficos
+			cada grafico tiene su propio lenguaje
+			cada grafico inicia y termina con llaves
+	lexemas
+		mi_texto = á©-,
+		mi_color = #f0f0f0
+	> dashboard
+		{
+			"title": "Mi Página Web", // para dashboard
+			"description": "Una página web de ejemplo", // opcional
+			"keywords": ["página web", "ejemplo", "JSON"], // aclaracion3
+			"header": { "title": "Bienvenido a mi sitio web" }, // para pagina web
+			"footer": { "copyright": "© 2024" }, // para pagina web
+			"backgroundColor": "#f0f0f0", // predefinido: blanco hueso
+			"fontFamily": "Arial, sans-serif", 
+			"fontSize": "16px"
+
+			{
+				"data": [], 
+				...
+			}
+		}
+
+graficos
+> barras simple
+// aclaracion4
+{
+	"data": [
+		{ "category": "A", "value": 30 },
+		{ "category": "B", "value": 50 },
+		{ "category": "C", "value": 20 },
+		{ "category": "D", "value": 45 },
+		{ "category": "E", "value": 60 }
+	]
+}
+> barras extensa
+{
+	"data": [
+	{ "category": "A", "value": 30, "color": "#ff5733" },
+	{ "category": "B", "value": 50, "color": "#33ff57" },
+	{ "category": "C", "value": 20, "color": "#5733ff" },
+	{ "category": "D", "value": 45, "color": "#ffff33" },
+	{ "category": "E", "value": 60, "color": "#33ffff" }
+	],
+	"chart": {
+		"title": "Gráfica de Barras",
+		"xAxisLabel": "Categorías",
+		"yAxisLabel": "Valores"
+	}
+}
+> pastel simple
+{
+	"data": [
+		{ "label": "A", "value": 30 },
+		{ "label": "B", "value": 50 },
+		{ "label": "C", "value": 20 }
+	]
+}
+> pastel extensa
+{
+	"data": [
+		{ "label": "A", "value": 30, "color": "#ff5733" },
+		{ "label": "B", "value": 50, "color": "#33ff57" },
+		{ "label": "C", "value": 20, "color": "#5733ff" }
+	],
+	"chart": {
+		"title": "Gráfica de Pastel",
+		"legendPosition": "bottom"
+	}
+}
+> puntos simple
+{
+	"data": [
+		{ "x": 10, "y": 20 },
+		{ "x": 30, "y": 40 },
+		{ "x": 50, "y": 60 },
+		{ "x": 70, "y": 80 },
+		{ "x": 90, "y": 100 }
+	]
+}
+> puntos extensa
+{
+	"data": [
+		{ "x": 10, "y": 20, "size": 5, "color": "#ff5733" },
+		{ "x": 30, "y": 40, "size": 8, "color": "#33ff57" },
+		{ "x": 50, "y": 60, "size": 10, "color": "#5733ff" },
+		{ "x": 70, "y": 80, "size": 6, "color": "#ffff33" },
+		{ "x": 90, "y": 100, "size": 7, "color": "#33ffff" }
+	],
+	"chart": {
+		"title": "Gráfico de Puntos",
+		"xAxisLabel": "Eje X",
+		"yAxisLabel": "Eje Y"
+	}
+}
+> lineas simple
+{
+	"data": [
+		{
+			"name": "Serie 1",
+			"points": [
+				{ "x": 1, "y": 10 },
+				{ "x": 2, "y": 20 },
+				{ "x": 3, "y": 15 },
+				{ "x": 4, "y": 25 },
+				{ "x": 5, "y": 30 }
+			]
+		},
+		{
+			"name": "Serie 2",
+			"points": [
+				{ "x": 1, "y": 15 },
+				{ "x": 2, "y": 25 },
+				{ "x": 3, "y": 20 },
+				{ "x": 4, "y": 30 },
+				{ "x": 5, "y": 35 }
+			]
+		}
+	],
+	"chart": {
+		"title": "Gráfico de Líneas",
+		"xAxisLabel": "Eje X",
+		"yAxisLabel": "Eje Y"
+	}
+}
+> lineas extensa
+{
+	"data": [
+		{
+			"name": "Serie 1",
+			"points": [
+			{ "x": 1, "y": 10, "label": "Punto 1" },
+			{ "x": 2, "y": 20, "label": "Punto 2" },
+			{ "x": 3, "y": 15, "label": "Punto 3" },
+			{ "x": 4, "y": 25, "label": "Punto 4" },
+			{ "x": 5, "y": 30, "label": "Punto 5" }
+			],
+			"color": "#ff5733",
+			"lineStyle": "solid"
+		},
+		{
+			"name": "Serie 2",
+			"points": [
+			{ "x": 1, "y": 15, "label": "Punto 1" },
+			{ "x": 2, "y": 25, "label": "Punto 2" },
+			{ "x": 3, "y": 20, "label": "Punto 3" },
+			{ "x": 4, "y": 30, "label": "Punto 4" },
+			{ "x": 5, "y": 35, "label": "Punto 5" }
+			],
+			"color": "#33ff57",
+			"lineStyle": "dashed"
+		}
+	],
+	"chart": {
+		"title": "Gráfico de Líneas",
+		"xAxisLabel": "Eje X",
+		"yAxisLabel": "Eje Y"
+	}
+}
+
+> tarjetas simple
+{
+	"data": {
+		"value": 75,
+		"label": "Porcentaje completado",
+		"description": "Este es el porcentaje de completado de la tarea actual."
+	}
+}
+> tarjetas extensa
+{
+	"data": {
+		"value": 42,
+		"label": "Puntos obtenidos",
+		"description": "Estos son los puntos obtenidos en la última evaluación.",
+		"icon": "fa-star",
+		"color": "#FFD700",
+		"link": "https://example.com/more-info"
+	}
+}
+
+
+
+
+variables
+	tipo
+		entero
+			id = 2;
+		decimal
+			id = 45.6;
+		bool
+			id = true;
+		cadena
+			id = "da45d65d";
+	lexema
+		id = [0-9a-zA-Z]*[iI][dD]
+operaciones
+	entre entero y decimal
+		sintaxis
+			operando operador_binario operando ;
+			operando operador_unario ;
+		operadores
+			*
+			+
+			/
+			-
+			id++ ;
+			id-- ;
+			id += 7 ;
+			id -= 7 ;
+			id *= 7 ;
+			id /= 7 ;
+	comparaciones
+		==
+		!=
+		<
+		>
+		<=
+		>=
+flujo
+	if-else
+		id = 3;
+		if(id==2) {...grafico...} else {...grafico...}
+	for
+		for ( id = 1; id <= 5; id++) {...grafico...}
+	while
+		id = 3;
+		while (id <= 64) { ...grafico... id++; }
+	do-while
+		do{ ...grafico... id+=5; } while(id<=5);
+
+extras
+	graficos predefinidos
+	numero de linea y columna
+	
+
+
+// ACLARACIONES
+	aclaracion1: dashboard como paginas web que van a contener las distintas paginas que asi lo requieran
+	aclaracion3: para "busqueda" <- definir como funciona la busqueda
+	aclaracion4: la altura es absoluta o se calcula dependiendo de la barra con mayor value??
+	
+	aclaracion2: cada propiedad del dashboard debe seguir la misma organizacion del ejemplo??
+	se puede mezclar el orden entre propiedades y graficos??
+	
+	// el contenido de estos flujos pueden tener porciones de graficas o graficas completas??
+	// es posible que se aniden los flujos??
+	// pueden ir varios else??
+	// es posible que se declaren variables dentro del las estructuras de control (a exepcion de while)??
+
