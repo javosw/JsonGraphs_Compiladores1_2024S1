@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/graficos"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:gravity="center|center_vertical"
@@ -35,7 +35,7 @@
             android:scrollIndicators="none"
             android:scrollbars="horizontal|vertical"
             android:scrollHorizontally="true"
-            android:text="ASDALSDLKAJSLDKAJSLDKJASLKASDASAAAAAAAAAAAAAAAAAAAAAAD\nasda a  s s sd sd sdfsdfsdfsdf sdf sdf" />
+            />
 
         <Button
             android:id="@+id/b_parse"

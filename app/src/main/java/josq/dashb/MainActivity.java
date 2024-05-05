@@ -1,22 +1,14 @@
 package josq.dashb;
 
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
 import josq.dashb.databinding.ActivityMainBinding;
-
-import android.view.Menu;
-import android.view.MenuItem;
+import josq.lenguajes.automatas.Automata;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -29,30 +21,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.bParse.setOnClickListener(e -> {
-            System.out.println(binding.editor.getText().toString());
+            try {
+                Automata.getDashbDesdeString(binding.editor.getText().toString());
+
+            } catch (Exception ex) {
+                System.out.println("@setOnClickListener: "+ex.getMessage());
+            }
         });
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        binding.graficos.setOnLongClickListener(myView -> {
+            showPopUpMenu(myView);
             return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        });
     }
+    private void showPopUpMenu(View myView)
+    {
+        PopupMenu myMenu = new PopupMenu(this, myView);
+        myMenu.setOnMenuItemClickListener(i -> { return onMenuItemClick(i); });
+        myMenu.getMenuInflater().inflate(R.menu.menu_graficos, myMenu.getMenu());
+        myMenu.show();
+    }
+
+    boolean onMenuItemClick(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.todas) {
+            System.out.println("TODAS"); return true; }
+        else if(id == R.id.barras) {
+            System.out.println("BARRAS"); return true; }
+        else if(id == R.id.pastel) {
+            System.out.println("PASTEL"); return true; }
+        else if(id == R.id.puntos) { return true; }
+        else if(id == R.id.lineas) { return true; }
+        else if(id == R.id.tarjeta) { return true; }
+        return false;
+    }
+
+
 }
