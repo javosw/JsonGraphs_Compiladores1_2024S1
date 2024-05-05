@@ -160,7 +160,13 @@ non terminal name ;
 start with dashboard ;
 
 dashboard ::=
-    IZQLLAVE properties graficos DERLLAVE
+    IZQLLAVE content DERLLAVE
+;
+content ::= 
+    properties 
+    | graficos
+    | content properties
+    | content graficos
 ;
 
 // PROPERTIES >>>>>>>>>>>>>>>>>>>

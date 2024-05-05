@@ -1,3 +1,4 @@
 copy /y "src\main\java\josq\lenguajes\automatas\LexerDashb.java" "C:\Users\JavierOswaldo\Desktop\PROCESADORES-LENGUAJE\CODIFICACION\fast-dashboard\codigo\android\app\src\main\java\josq\lenguajes\automatas"
 copy /y "src\main\java\josq\lenguajes\automatas\ParserDashb.java" "C:\Users\JavierOswaldo\Desktop\PROCESADORES-LENGUAJE\CODIFICACION\fast-dashboard\codigo\android\app\src\main\java\josq\lenguajes\automatas"
 copy /y "src\main\java\josq\lenguajes\automatas\ParserDashbSym.java" "C:\Users\JavierOswaldo\Desktop\PROCESADORES-LENGUAJE\CODIFICACION\fast-dashboard\codigo\android\app\src\main\java\josq\lenguajes\automatas"
+del /q "C:\Users\JavierOswaldo\Desktop\PROCESADORES-LENGUAJE\CODIFICACION\fast-dashboard\codigo\lenguajes\src\main\java\josq\lenguajes\automatas\LexerDashb.java~"
