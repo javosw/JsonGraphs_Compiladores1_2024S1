@@ -12,6 +12,7 @@ import josq.lenguajes.automatas.Automata;
  */
 public class Lenguajes {
 
+
     public static void main(String[] args) {
         leerDashb();
     }

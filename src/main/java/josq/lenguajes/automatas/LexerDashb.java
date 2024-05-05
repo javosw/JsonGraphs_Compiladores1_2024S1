@@ -83,9 +83,12 @@ public class LexerDashb implements java_cup.runtime.Scanner {
     "\1\34\1\35\1\36\1\37\1\40\1\41\1\5\1\42"+
     "\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52"+
     "\1\53\1\0\1\54\43\0\1\55\7\0\1\55\3\0"+
-    "\1\55\3\0\1\55\1\0\1\55\6\0\1\55\7\0"+
-    "\2\55\235\0\1\55\u01b6\0\1\55\3\0\1\55\23\0"+
-    "\1\55\u01cc\0\1\55\2\0";
+    "\1\55\3\0\1\55\1\0\1\55\6\0\1\55\6\0"+
+    "\3\55\5\0\1\55\3\0\1\55\3\0\1\55\1\0"+
+    "\1\55\6\0\1\55\6\0\1\55\7\0\1\55\3\0"+
+    "\1\55\3\0\1\55\1\0\1\55\6\0\1\55\146\0"+
+    "\1\55\u01b6\0\1\55\3\0\1\55\23\0\1\55\u01cc\0"+
+    "\1\55\2\0";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[1280];
@@ -707,36 +710,25 @@ public class LexerDashb implements java_cup.runtime.Scanner {
 
     public class Punto
     {
-        private long pchar;
-        private int plength;
+        private long r1;
+        private long r2;
         private int pline;
         private int pcolumn;
 
         public Punto(long pchar, int plength, int pline, int pcolumn)
         {
-            this.pchar = pchar;
-            this.plength = plength;
+            this.r1 = pchar;
+            this.r2 = pchar + plength - 1;
             this.pline = pline;
             this.pcolumn = pcolumn;
-        }
-
-        @Override
-        public String toString()
-        {
-            String tchar = "char="+pchar;
-            String tlength = "leng="+plength;
-            String tline = "line="+pline;
-            String tcolumn = "col="+pcolumn;
-            return tchar+", "+tlength+", "+tline+", "+tcolumn;
         }
         
         public String getValues()
         {
-            String tchar = "p="+pchar;
-            String tlength = "l="+plength;
+            String tr = "r="+r1+"-"+r2;
             String tline = "y="+pline;
             String tcolumn = "x="+pcolumn;
-            return tchar+", "+tlength+", "+tline+", "+tcolumn;
+            return tr+", "+tline+", "+tcolumn;
         }
     }
 
@@ -1194,9 +1186,8 @@ public class LexerDashb implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { /*log("@lexer: ").append(getPuntoActual().toString()).append("\n");*/ 
-    print("@error: "+yytext()+","+puntoActual().getValues()+"\n");
-    return symbol(ParserDashbSym.error);
+            { //print("@error: "+yytext()+","+puntoActual().getValues()+"\n");
+    symbol(ParserDashbSym.error);
             }
           // fall through
           case 38: break;
@@ -1206,177 +1197,177 @@ public class LexerDashb implements java_cup.runtime.Scanner {
           // fall through
           case 39: break;
           case 3:
-            { return symbol(ParserDashbSym.COMA);
+            { symbol(ParserDashbSym.COMA);
             }
           // fall through
           case 40: break;
           case 4:
-            { return symbol(ParserDashbSym.MI_INTEGER);
+            { symbol(ParserDashbSym.MI_INTEGER);
             }
           // fall through
           case 41: break;
           case 5:
-            { return symbol(ParserDashbSym.IZQCORCH);
+            { symbol(ParserDashbSym.IZQCORCH);
             }
           // fall through
           case 42: break;
           case 6:
-            { return symbol(ParserDashbSym.DERCORCH);
+            { symbol(ParserDashbSym.DERCORCH);
             }
           // fall through
           case 43: break;
           case 7:
-            { return symbol(ParserDashbSym.IZQLLAVE);
+            { symbol(ParserDashbSym.IZQLLAVE);
             }
           // fall through
           case 44: break;
           case 8:
-            { return symbol(ParserDashbSym.DERLLAVE);
+            { symbol(ParserDashbSym.DERLLAVE);
             }
           // fall through
           case 45: break;
           case 9:
-            { return symbol(ParserDashbSym.MI_TEXTO);
+            { symbol(ParserDashbSym.MI_TEXTO);
             }
           // fall through
           case 46: break;
           case 10:
-            { return symbol(ParserDashbSym.KD_X);
+            { symbol(ParserDashbSym.KD_X);
             }
           // fall through
           case 47: break;
           case 11:
-            { return symbol(ParserDashbSym.KD_Y);
+            { symbol(ParserDashbSym.KD_Y);
             }
           // fall through
           case 48: break;
           case 12:
-            { return symbol(ParserDashbSym.KD_DATA);
+            { symbol(ParserDashbSym.KD_DATA);
             }
           // fall through
           case 49: break;
           case 13:
-            { return symbol(ParserDashbSym.KD_ICON);
+            { symbol(ParserDashbSym.KD_ICON);
             }
           // fall through
           case 50: break;
           case 14:
-            { return symbol(ParserDashbSym.KD_LINK);
+            { symbol(ParserDashbSym.KD_LINK);
             }
           // fall through
           case 51: break;
           case 15:
-            { return symbol(ParserDashbSym.KD_NAME);
+            { symbol(ParserDashbSym.KD_NAME);
             }
           // fall through
           case 52: break;
           case 16:
-            { return symbol(ParserDashbSym.KD_SIZE);
+            { symbol(ParserDashbSym.KD_SIZE);
             }
           // fall through
           case 53: break;
           case 17:
-            { return symbol(ParserDashbSym.KD_CHART);
+            { symbol(ParserDashbSym.KD_CHART);
             }
           // fall through
           case 54: break;
           case 18:
-            { return symbol(ParserDashbSym.KD_COLOR);
+            { symbol(ParserDashbSym.KD_COLOR);
             }
           // fall through
           case 55: break;
           case 19:
-            { return symbol(ParserDashbSym.KD_LABEL);
+            { symbol(ParserDashbSym.KD_LABEL);
             }
           // fall through
           case 56: break;
           case 20:
-            { return symbol(ParserDashbSym.KD_TITLE);
+            { symbol(ParserDashbSym.KD_TITLE);
             }
           // fall through
           case 57: break;
           case 21:
-            { return symbol(ParserDashbSym.KD_VALUE);
+            { symbol(ParserDashbSym.KD_VALUE);
             }
           // fall through
           case 58: break;
           case 22:
-            { return symbol(ParserDashbSym.MI_COLOR);
+            { symbol(ParserDashbSym.MI_COLOR);
             }
           // fall through
           case 59: break;
           case 23:
-            { return symbol(ParserDashbSym.KD_FOOTER);
+            { symbol(ParserDashbSym.KD_FOOTER);
             }
           // fall through
           case 60: break;
           case 24:
-            { return symbol(ParserDashbSym.KD_HEADER);
+            { symbol(ParserDashbSym.KD_HEADER);
             }
           // fall through
           case 61: break;
           case 25:
-            { return symbol(ParserDashbSym.KD_PONTS);
+            { symbol(ParserDashbSym.KD_PONTS);
             }
           // fall through
           case 62: break;
           case 26:
-            { return symbol(ParserDashbSym.MI_URL);
+            { symbol(ParserDashbSym.MI_URL);
             }
           // fall through
           case 63: break;
           case 27:
-            { return symbol(ParserDashbSym.KD_CATEGORY);
+            { symbol(ParserDashbSym.KD_CATEGORY);
             }
           // fall through
           case 64: break;
           case 28:
-            { return symbol(ParserDashbSym.KD_FONTSIZE);
+            { symbol(ParserDashbSym.KD_FONTSIZE);
             }
           // fall through
           case 65: break;
           case 29:
-            { return symbol(ParserDashbSym.KD_KEYWORDS);
+            { symbol(ParserDashbSym.KD_KEYWORDS);
             }
           // fall through
           case 66: break;
           case 30:
-            { return symbol(ParserDashbSym.KD_COPYR);
+            { symbol(ParserDashbSym.KD_COPYR);
             }
           // fall through
           case 67: break;
           case 31:
-            { return symbol(ParserDashbSym.KD_LINE);
+            { symbol(ParserDashbSym.KD_LINE);
             }
           // fall through
           case 68: break;
           case 32:
-            { return symbol(ParserDashbSym.KD_FONTFAM);
+            { symbol(ParserDashbSym.KD_FONTFAM);
             }
           // fall through
           case 69: break;
           case 33:
-            { return symbol(ParserDashbSym.KD_XLABEL);
+            { symbol(ParserDashbSym.KD_XLABEL);
             }
           // fall through
           case 70: break;
           case 34:
-            { return symbol(ParserDashbSym.KD_YLABEL);
+            { symbol(ParserDashbSym.KD_YLABEL);
             }
           // fall through
           case 71: break;
           case 35:
-            { return symbol(ParserDashbSym.KD_DESCRIP);
+            { symbol(ParserDashbSym.KD_DESCRIP);
             }
           // fall through
           case 72: break;
           case 36:
-            { return symbol(ParserDashbSym.KD_LEGEND);
+            { symbol(ParserDashbSym.KD_LEGEND);
             }
           // fall through
           case 73: break;
           case 37:
-            { return symbol(ParserDashbSym.KD_BACKGR);
+            { symbol(ParserDashbSym.KD_BACKGR);
             }
           // fall through
           case 74: break;

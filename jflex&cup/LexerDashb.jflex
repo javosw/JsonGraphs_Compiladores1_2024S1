@@ -54,36 +54,25 @@ import java_cup.runtime.DefaultSymbolFactory;
 
     public class Punto
     {
-        private long pchar;
-        private int plength;
+        private long r1;
+        private long r2;
         private int pline;
         private int pcolumn;
 
         public Punto(long pchar, int plength, int pline, int pcolumn)
         {
-            this.pchar = pchar;
-            this.plength = plength;
+            this.r1 = pchar;
+            this.r2 = pchar + plength - 1;
             this.pline = pline;
             this.pcolumn = pcolumn;
-        }
-
-        @Override
-        public String toString()
-        {
-            String tchar = "char="+pchar;
-            String tlength = "leng="+plength;
-            String tline = "line="+pline;
-            String tcolumn = "col="+pcolumn;
-            return tchar+", "+tlength+", "+tline+", "+tcolumn;
         }
         
         public String getValues()
         {
-            String tchar = "p="+pchar;
-            String tlength = "l="+plength;
+            String tr = "r="+r1+"-"+r2;
             String tline = "y="+pline;
             String tcolumn = "x="+pcolumn;
-            return tchar+", "+tlength+", "+tline+", "+tcolumn;
+            return tr+", "+tline+", "+tcolumn;
         }
     }
 
@@ -126,7 +115,13 @@ _v   =  \r|\n|\r\n
 _h   =  [ \t\f]
 __   =  {_v}|{_h}
 
-miChar = [0-9a-zA-ZáéíóúñÁÉÍÓÚÑ©\,\.\-\_]
+// áÁ = \u00E1\u00C1
+// éÉ = \u00E9\u00C9
+// íÍ = \u00ED\u00CD
+// óÓ = \u00F3\u00D3
+// úÚ = \u00FA\u00DA
+// ñÑ = \u00F1\u00D1
+miChar = [0-9a-zA-Z©áÁéÉíÍóÓúÚñÑ\,\.\-\_\u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1]
 miTexto = \"({__}|{miChar})+\"
 //miTextoXt
 //miURL
@@ -164,56 +159,55 @@ name = \"{__}*"name"{__}*\"{__}*\:
 
 %%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%
-// yybegin(MI_ETIQUETA);
+// yybegin(CONTEXTO_1);
 
 <YYINITIAL> {
 
-{x}                    { return symbol(ParserDashbSym.KD_X); }
-{y}                    { return symbol(ParserDashbSym.KD_Y); }
-{data}                 { return symbol(ParserDashbSym.KD_DATA); }
-{icon}                 { return symbol(ParserDashbSym.KD_ICON); }
-{link}                 { return symbol(ParserDashbSym.KD_LINK); }
-{size}                 { return symbol(ParserDashbSym.KD_SIZE); }
-{name}                 { return symbol(ParserDashbSym.KD_NAME); }
-{value}                { return symbol(ParserDashbSym.KD_VALUE); }
-{color}                { return symbol(ParserDashbSym.KD_COLOR); }
-{chart}                { return symbol(ParserDashbSym.KD_CHART); }
-{label}                { return symbol(ParserDashbSym.KD_LABEL); }
-{title}                { return symbol(ParserDashbSym.KD_TITLE); }
-{header}               { return symbol(ParserDashbSym.KD_HEADER); }
-{footer}               { return symbol(ParserDashbSym.KD_FOOTER); }
-{points}               { return symbol(ParserDashbSym.KD_PONTS); }
-{keywords}             { return symbol(ParserDashbSym.KD_KEYWORDS); }
-{fontSize}             { return symbol(ParserDashbSym.KD_FONTSIZE); }
-{category}             { return symbol(ParserDashbSym.KD_CATEGORY); }
-{lineStyle}            { return symbol(ParserDashbSym.KD_LINE); }
-{copyright}            { return symbol(ParserDashbSym.KD_COPYR); }
-{fontFamily}           { return symbol(ParserDashbSym.KD_FONTFAM); }
-{xAxisLabel}           { return symbol(ParserDashbSym.KD_XLABEL); }
-{yAxisLabel}           { return symbol(ParserDashbSym.KD_YLABEL); }
-{description}          { return symbol(ParserDashbSym.KD_DESCRIP); }
-{legendPosition}       { return symbol(ParserDashbSym.KD_LEGEND); }
-{backgroundColor}      { return symbol(ParserDashbSym.KD_BACKGR); }
+{x}                    {  symbol(ParserDashbSym.KD_X); }
+{y}                    {  symbol(ParserDashbSym.KD_Y); }
+{data}                 {  symbol(ParserDashbSym.KD_DATA); }
+{icon}                 {  symbol(ParserDashbSym.KD_ICON); }
+{link}                 {  symbol(ParserDashbSym.KD_LINK); }
+{size}                 {  symbol(ParserDashbSym.KD_SIZE); }
+{name}                 {  symbol(ParserDashbSym.KD_NAME); }
+{value}                {  symbol(ParserDashbSym.KD_VALUE); }
+{color}                {  symbol(ParserDashbSym.KD_COLOR); }
+{chart}                {  symbol(ParserDashbSym.KD_CHART); }
+{label}                {  symbol(ParserDashbSym.KD_LABEL); }
+{title}                {  symbol(ParserDashbSym.KD_TITLE); }
+{header}               {  symbol(ParserDashbSym.KD_HEADER); }
+{footer}               {  symbol(ParserDashbSym.KD_FOOTER); }
+{points}               {  symbol(ParserDashbSym.KD_PONTS); }
+{keywords}             {  symbol(ParserDashbSym.KD_KEYWORDS); }
+{fontSize}             {  symbol(ParserDashbSym.KD_FONTSIZE); }
+{category}             {  symbol(ParserDashbSym.KD_CATEGORY); }
+{lineStyle}            {  symbol(ParserDashbSym.KD_LINE); }
+{copyright}            {  symbol(ParserDashbSym.KD_COPYR); }
+{fontFamily}           {  symbol(ParserDashbSym.KD_FONTFAM); }
+{xAxisLabel}           {  symbol(ParserDashbSym.KD_XLABEL); }
+{yAxisLabel}           {  symbol(ParserDashbSym.KD_YLABEL); }
+{description}          {  symbol(ParserDashbSym.KD_DESCRIP); }
+{legendPosition}       {  symbol(ParserDashbSym.KD_LEGEND); }
+{backgroundColor}      {  symbol(ParserDashbSym.KD_BACKGR); }
 
-{miInteger}            { return symbol(ParserDashbSym.MI_INTEGER); }
-{miColor}              { return symbol(ParserDashbSym.MI_COLOR); }
-{miURL}                { return symbol(ParserDashbSym.MI_URL); }
-{miTexto}              { return symbol(ParserDashbSym.MI_TEXTO); }
+{miInteger}            {  symbol(ParserDashbSym.MI_INTEGER); }
+{miColor}              {  symbol(ParserDashbSym.MI_COLOR); }
+{miURL}                {  symbol(ParserDashbSym.MI_URL); }
+{miTexto}              {  symbol(ParserDashbSym.MI_TEXTO); }
 
 }
 
-"{"  { return symbol(ParserDashbSym.IZQLLAVE); }
-"}"  { return symbol(ParserDashbSym.DERLLAVE); }
-"["  { return symbol(ParserDashbSym.IZQCORCH); }
-"]"  { return symbol(ParserDashbSym.DERCORCH); }
-","  { return symbol(ParserDashbSym.COMA); }
+"{"  {  symbol(ParserDashbSym.IZQLLAVE); }
+"}"  {  symbol(ParserDashbSym.DERLLAVE); }
+"["  {  symbol(ParserDashbSym.IZQCORCH); }
+"]"  {  symbol(ParserDashbSym.DERCORCH); }
+","  {  symbol(ParserDashbSym.COMA); }
 
 // ignorados
 {__}+ {}
 // error
 [^]  {
-    /*log("@lexer: ").append(getPuntoActual().toString()).append("\n");*/ 
-    print("@error: "+yytext()+","+puntoActual().getValues()+"\n");
-    return symbol(ParserDashbSym.error);
+    //print("@error: "+yytext()+","+puntoActual().getValues()+"\n");
+    symbol(ParserDashbSym.error);
 }
 
