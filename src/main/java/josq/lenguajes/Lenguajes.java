@@ -12,25 +12,21 @@ import josq.lenguajes.automatas.Automata;
  */
 public class Lenguajes {
 
-
     public static void main(String[] args) {
         leerDashb();
     }
     
-    
     static void leerDashb()
     {
-        String ruta = "C:\\DASHB\\test1.json";
+        String ruta = "C:\\DASHB\\barras";
         
         try
-        {            
+        {
             Automata.getDashbDesdeArchivo(ruta);
         }
         catch (Exception ex)
         {
             System.out.println(ex.getMessage());
         }
-        
-        
     } 
 }

@@ -115,13 +115,17 @@ _v   =  \r|\n|\r\n
 _h   =  [ \t\f]
 __   =  {_v}|{_h}
 
-// áÁ = \u00E1\u00C1
-// éÉ = \u00E9\u00C9
-// íÍ = \u00ED\u00CD
-// óÓ = \u00F3\u00D3
-// úÚ = \u00FA\u00DA
-// ñÑ = \u00F1\u00D1
-miChar = [0-9a-zA-Z©áÁéÉíÍóÓúÚñÑ\,\.\-\_\u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1]
+// áÁ = \u00E1\u00C1  \341\301
+// éÉ = \u00E9\u00C9  \351\311
+// íÍ = \u00ED\u00CD  \355\315
+// óÓ = \u00F3\u00D3  \363\323
+// úÚ = \u00FA\u00DA  \372\332
+// ñÑ = \u00F1\u00D1  \361\321
+
+// áÁéÉíÍóÓúÚñÑ
+// \341\301\351\311\355\315\363\323\372\332\361\321
+// \u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1
+miChar = [0-9a-zA-Z©\,\.\-\_áÁéÉíÍóÓúÚñÑ]
 miTexto = \"({__}|{miChar})+\"
 //miTextoXt
 //miURL
@@ -190,10 +194,10 @@ name = \"{__}*"name"{__}*\"{__}*\:
 {legendPosition}       { return symbol(ParserDashbSym.KD_LEGEND); }
 {backgroundColor}      { return symbol(ParserDashbSym.KD_BACKGR); }
 
-{miInteger}            { return symbol(ParserDashbSym.MI_INTEGER); }
-{miColor}              { return symbol(ParserDashbSym.MI_COLOR); }
-{miURL}                { return symbol(ParserDashbSym.MI_URL); }
-{miTexto}              { return symbol(ParserDashbSym.MI_TEXTO); }
+{miInteger}            { return symbol(ParserDashbSym.MI_INTEGER,yytext()); }
+{miColor}              { return symbol(ParserDashbSym.MI_COLOR,yytext()); }
+{miURL}                { return symbol(ParserDashbSym.MI_URL,yytext()); }
+{miTexto}              { return symbol(ParserDashbSym.MI_TEXTO,yytext()); }
 
 }
 

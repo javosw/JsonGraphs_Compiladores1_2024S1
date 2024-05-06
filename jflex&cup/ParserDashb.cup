@@ -5,6 +5,11 @@ package josq.lenguajes.automatas;
 
 import java.util.ArrayList;
 //import java_cup.runtime.*;
+import josq.lenguajes.modelos.Barras;
+import josq.lenguajes.modelos.Index;
+import josq.lenguajes.modelos.Par;
+import josq.lenguajes.modelos.BarrasXt;
+import josq.lenguajes.modelos.Chart1;
 
 // NOTA: %cupsym en jflex
 // parser=MyParser, sym=MyParserSym
@@ -30,10 +35,7 @@ action code {:
 
 // #%#%#%#% TERMINALES #%#%#%#%
 
-terminal MI_TEXTO ;
-terminal MI_URL ;
-terminal MI_INTEGER ;
-terminal MI_COLOR ;
+terminal String MI_TEXTO, MI_URL, MI_INTEGER, MI_COLOR ;
 
 terminal IZQLLAVE ;
 terminal DERLLAVE ;
@@ -70,33 +72,25 @@ terminal KD_NAME ;
 
 // #%#%#%#% NO TERMINALES #%#%#%#%
 
-non terminal dashboard ;
-non terminal properties ;
-non terminal property ;
-non terminal propertyList ;
-non terminal graficos ;
-non terminal grafico ;
-non terminal barras ;
-non terminal barrasData ;
-non terminal barrasDataList ;
-non terminal barrasDataValue ;
-non terminal barrasDataList2 ;
-non terminal barrasXt ;
-non terminal barrasXtData ;
-non terminal barrasXtDataList ;
-non terminal barrasXtDataList2 ;
-non terminal barrasXtDataValue ;
-non terminal pastel ;
-non terminal pastelData ;
-non terminal pastelDataList ;
-non terminal pastelDataList2 ;
-non terminal pastelDataValue ;
-non terminal pastelXt ;
-non terminal pastelXtData ;
-non terminal pastelXtDataList ;
-non terminal pastelXtDataList2 ;
-non terminal pastelXtDataValue ;
-non terminal pastelXtChart ;
+non terminal String title, description, keywords, header, footer, backgr, fontFam, fontSize ;
+non terminal ArrayList<Par> dashboard, content, content2, content3 ;
+non terminal ArrayList<Par> properties, propertyList ;
+non terminal Par property ;
+non terminal Object grafico ;
+non terminal ArrayList<Object> graficos ;
+non terminal Barras barras ;
+non terminal Barras.Data barrasDataValue ;
+non terminal ArrayList<Barras.Data> barrasData, barrasDataList, barrasDataList2 ;
+non terminal BarrasXt barrasXt ;
+non terminal BarrasXt.Data barrasXtDataValue ;
+non terminal ArrayList<BarrasXt.Data> barrasXtData, barrasXtDataList, barrasXtDataList2 ;
+non terminal Pastel pastel ;
+non terminal ArrayList<Pastel.Data> pastelData, pastelDataList, pastelDataList2 ;
+non terminal Pastel.Data pastelDataValue ;
+non terminal PastelXt pastelXt ;
+non terminal PastelXt.Data pastelXtDataValue ;
+non terminal pastelXtData, pastelXtDataList, pastelXtDataList2 ;
+non terminal Chart2 pastelXtChart ;
 non terminal puntos ;
 non terminal puntosData ;
 non terminal puntosDataList ;
@@ -120,28 +114,24 @@ non terminal lineasXtDataList2 ;
 non terminal tarjeta ;
 non terminal tarjetaData ;
 non terminal tarjetaXt ;
-non terminal label ;
-non terminal icon ;
-non terminal link ;
-non terminal title ;
-non terminal description ;
-non terminal copyright ;
-non terminal backgr ;
-non terminal fontFam ;
-non terminal fontSize ;
-non terminal category ;
-non terminal value ;
-non terminal color ;
-non terminal xLabel ;
-non terminal yLabel ;
-non terminal legend ;
-non terminal xValue ;
-non terminal yValue ;
-non terminal size ;
-non terminal header ;
-non terminal footer ;
-non terminal chart ;
-non terminal keywords ;
+
+non terminal String category, value ;
+non terminal Chart1 chart ;
+non terminal String xLabel, yLabel ;
+
+non terminal String color ;
+non terminal String legend ;
+non terminal String xValue ;
+non terminal String yValue ;
+non terminal String name ;
+non terminal String size ;
+
+non terminal String label ;
+non terminal String icon ;
+non terminal String link ;
+non terminal String copyright ;
+
+
 non terminal keywordList ;
 non terminal keywordList2 ;
 non terminal points ;
@@ -153,126 +143,148 @@ non terminal pointXtList ;
 non terminal pointXtList2 ;
 non terminal pointXtValue ;
 non terminal lineStyle ; 
-non terminal name ;
+
+
+
 // PRODUCCIONES
 
 // definicion de la produccion inicial
 start with dashboard ;
 
 dashboard ::=
-    IZQLLAVE content DERLLAVE
+    IZQLLAVE content:w1 DERLLAVE {: RESULT=w1; :}
 ;
 content ::= 
-    properties 
-    | graficos
-    | content properties
-    | content graficos
+    properties:w1 content2:w2 {: w2.add(new Par(Index.SD_PROPERTY,w1)); RESULT=w2; :}
+    | graficos:w1 content3:w2 {: w2.add(new Par(Index.SD_GRAFICOS,w1)); RESULT=w2; :}
+;
+content2 ::=
+    graficos:w1 {: ArrayList<Par> list= new ArrayList<>(); list.add(new Par(Index.SD_GRAFICOS,w1)); RESULT=list; :}
+    | content2:w1 properties:w2 graficos:w3 {: w1.add(new Par(Index.SD_PROPERTY,w2)); w1.add(new Par(Index.SD_GRAFICOS,w3)); RESULT=w1; :}
+;
+content3 ::=
+    properties:w1 {: ArrayList<Par> list= new ArrayList<>(); list.add(new Par(Index.SD_PROPERTY,w1)); RESULT=list; :}
+    | content3:w1 graficos:w2 properties:w3 {: w1.add(new Par(Index.SD_GRAFICOS,w2)); w1.add(new Par(Index.SD_PROPERTY,w3)); RESULT=w1; :}
 ;
 
 // PROPERTIES >>>>>>>>>>>>>>>>>>>
 properties ::= 
-    property
-    | propertyList property
+    property:w1 {: ArrayList<Par> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | propertyList:w1 property:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 property ::= 
-    title
-    | description
-    | keywords
-    | header
-    | footer
-    | backgr
-    | fontFam
-    | fontSize
+    title:w1         {: RESULT= new Par(Index.KD_TITLE,w1); :}
+    | description:w1 {: RESULT= new Par(Index.KD_DESCRIP,w1); :}
+    | keywords:w1    {: RESULT= new Par(Index.KD_KEYWORDS,w1); :}
+    | header:w1      {: RESULT= new Par(Index.KD_HEADER,w1); :}
+    | footer:w1      {: RESULT= new Par(Index.KD_FOOTER,w1); :}
+    | backgr:w1      {: RESULT= new Par(Index.KD_BACKGR,w1); :}
+    | fontFam:w1     {: RESULT= new Par(Index.KD_FONTFAM,w1); :}
+    | fontSize:w1    {: RESULT= new Par(Index.KD_FONTSIZE,w1); :}
 ;
 propertyList ::=
-    property COMA
-    | propertyList property COMA
+    property:w1 COMA {: ArrayList<Par> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | propertyList:w1 property:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
 
 // GRAFICOS >>>>>>>>>>>>>>>>>>>
 graficos ::=
-    grafico
-    | graficos grafico
+    grafico:w1 {: ArrayList<Object> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | graficos:w1 grafico:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 grafico ::=
-    barras
-    | barrasXt
-    | pastel
-    | pastelXt
-    | puntos
-    | puntosXt
-    | lineas
-    | lineasXt
-    | tarjeta
-    | tarjetaXt
-    | error DERLLAVE
+    barras:w1      {: RESULT=w1; :}
+    | barrasXt:w1  {: RESULT=w1; :}
+    | pastel:w1    {: RESULT=w1; :}
+    | pastelXt:w1  {: RESULT=w1; :}
+    | puntos:w1    {: RESULT=w1; :}
+    | puntosXt:w1  {: RESULT=w1; :}
+    | lineas:w1    {: RESULT=w1; :}
+    | lineasXt:w1  {: RESULT=w1; :}
+    | tarjeta:w1   {: RESULT=w1; :}
+    | tarjetaXt:w1 {: RESULT=w1; :}
+    | error DERLLAVE {: RESULT=null; :}
 ;
 
 // BARRAS >>>>>>>>>>>>>>>>>>>
 // barras
 barras ::=
-    IZQLLAVE barrasData DERLLAVE
+    IZQLLAVE barrasData:w1 DERLLAVE {: RESULT= new Barras(w1); :}
 ;
-barrasData ::= KD_DATA IZQCORCH barrasDataList DERCORCH
+barrasData ::= KD_DATA IZQCORCH barrasDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
 barrasDataList ::= 
-    barrasDataValue
-    | barrasDataList2 barrasDataValue
+    barrasDataValue:w1 {: ArrayList<Barras.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | barrasDataList2:w1 barrasDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 barrasDataValue ::=
-    IZQLLAVE category COMA value DERLLAVE
+    IZQLLAVE category:w1 COMA value:w2 DERLLAVE {: RESULT= new Barras.Data(w1,w2); :}
+    | IZQLLAVE value:w2 COMA category:w1 DERLLAVE {: RESULT= new Barras.Data(w1,w2); :}
 ;
 barrasDataList2 ::=
-    barrasDataValue COMA
-    | barrasDataList2 barrasDataValue COMA
+    barrasDataValue:w1 COMA {: ArrayList<Barras.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | barrasDataList2:w1 barrasDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
 // barrasXt
-barrasXt ::= IZQLLAVE barrasXtData COMA chart DERLLAVE 
+barrasXt ::= IZQLLAVE barrasXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new BarrasXt(w1,w2); :}
 ;
-barrasXtData ::= KD_DATA IZQCORCH barrasXtDataList DERCORCH
+barrasXtData ::= KD_DATA IZQCORCH barrasXtDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
 barrasXtDataList ::= 
-    barrasXtDataValue
-    | barrasXtDataList2 barrasXtDataValue
+    barrasXtDataValue:w1 {: ArrayList<BarrasXt.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | barrasXtDataList2:w1 barrasXtDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 barrasXtDataValue ::=
-    IZQLLAVE category COMA value COMA color DERLLAVE
+    IZQLLAVE category:w1 COMA value:w2 COMA color:w3 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
+    | IZQLLAVE category:w1 COMA color:w3 COMA value:w2 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
+    | IZQLLAVE value:w2 COMA category:w1 COMA color:w3 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
+    | IZQLLAVE value:w2 COMA color:w3 COMA category:w1 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
+    | IZQLLAVE color:w3 COMA value:w2 COMA category:w1 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
+    | IZQLLAVE color:w3 COMA category:w1 COMA value:w2 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
 ;
 barrasXtDataList2 ::=
-    barrasXtDataValue COMA
-    | barrasXtDataList2 barrasXtDataValue COMA
+    barrasXtDataValue:w1 COMA {: ArrayList<BarrasXt.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | barrasXtDataList2:w1 barrasXtDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
 
 // PASTEL >>>>>>>>>>>>>>>>>>>
 // pastel
-pastel ::= IZQLLAVE pastelData DERLLAVE
+pastel ::= IZQLLAVE pastelData:w1 DERLLAVE {: RESULT= new Pastel(w1); :}
 ;
-pastelData ::= KD_DATA IZQCORCH pastelDataList DERCORCH
+pastelData ::= KD_DATA IZQCORCH pastelDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
 pastelDataList ::= 
-    pastelDataValue
-    | pastelDataList2 pastelDataValue
+    pastelDataValue:w1 {: ArrayList<Pastel.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pastelDataList2:w1 pastelDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
-pastelDataValue ::= IZQLLAVE label COMA value DERLLAVE
+pastelDataValue ::= 
+    IZQLLAVE label:w1 COMA value:w2 DERLLAVE {: RESULT= new Pastel.Data(w1,w2); :}
+    | IZQLLAVE value:w2 COMA label:w1 DERLLAVE {: RESULT= new Pastel.Data(w1,w2); :}
 ;
 pastelDataList2 ::=
-    pastelDataValue COMA
-    | pastelDataList2 pastelDataValue COMA
+    pastelDataValue:w1 COMA {: ArrayList<Pastel.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pastelDataList2:w1 pastelDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
 // pastelXt
-pastelXt ::= IZQLLAVE pastelXtData COMA pastelXtChart DERLLAVE
+pastelXt ::= IZQLLAVE pastelXtData:w1 COMA pastelXtChart:w2 DERLLAVE {: RESULT= new PastelXt(w1,w2); :}
 ;
-pastelXtData ::= KD_DATA IZQCORCH pastelXtDataList DERCORCH
+pastelXtData ::= KD_DATA IZQCORCH pastelXtDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
 pastelXtDataList ::= 
-    pastelXtDataValue 
-    | pastelXtDataList2 pastelXtDataValue
+    pastelXtDataValue:w1 {: ArrayList<PastelXt.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pastelXtDataList2:w1 pastelXtDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
-pastelXtDataValue ::= IZQLLAVE label COMA value COMA color DERLLAVE
+pastelXtDataValue ::= 
+    IZQLLAVE label:w1 COMA value:w2 COMA color:w3 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
+    | IZQLLAVE label:w1 COMA color:w3 COMA value:w2 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
+    | IZQLLAVE value:w2 COMA label:w1 COMA color:w3 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
+    | IZQLLAVE value:w2 COMA color:w3 COMA label:w1 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
+    | IZQLLAVE color:w3 COMA value:w2 COMA label:w1 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
+    | IZQLLAVE color:w3 COMA label:w1 COMA value:w2 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
 ;
 pastelXtDataList2 ::=
-    pastelXtDataValue COMA
-    | pastelXtDataList2 pastelXtDataValue COMA
+    pastelXtDataValue:w1 COMA {: ArrayList<PastelXt.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pastelXtDataList2:w1 pastelXtDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
 
 // PUNTOS >>>>>>>>>>>>>>>>>>>
@@ -357,77 +369,86 @@ tarjetaXt ::= KD_DATA IZQLLAVE value COMA label COMA description COMA icon COMA 
 // MI_URL = "https://example.com/more-info"
 // MI_TEXTO = "Mi Página Web"
 
-// KD_LINE = "lineStyle":
-lineStyle ::= KD_LINE MI_TEXTO
-;
-// KD_NAME = "name":
-name ::= KD_NAME MI_TEXTO
-;
-// KD_LABEL = "label":
-label ::= KD_LABEL MI_TEXTO
-;
-// KD_ICON = "icon":
-icon ::= KD_ICON MI_TEXTO
-;
-// KD_LINK = "link":
-link ::= KD_LINK MI_URL
-;
+
+
+// PROPERTY
+
 // KD_TITLE = "title": 
-title ::= KD_TITLE MI_TEXTO
+title ::= KD_TITLE MI_TEXTO:w1 {: RESULT=w1; :}
 ;
 // KD_DESCRIP = "description": 
-description ::= KD_DESCRIP MI_TEXTO
+description ::= KD_DESCRIP MI_TEXTO:w1 {: RESULT=w1; :}
 ;
-// KD_COPYR = "copyright":
-copyright ::= KD_COPYR MI_TEXTO
-;
-// KD_BACKGR = "backgroundColor":
-backgr ::= KD_BACKGR MI_COLOR
-;
-// KD_FONTFAM = "fontFamily":
-fontFam ::= KD_FONTFAM MI_TEXTO
-;
-// KD_FONTSIZE = "fontSize":
-fontSize ::= KD_FONTSIZE MI_TEXTO
-;
-// KD_CATEGORY = "category":
-category ::= KD_CATEGORY MI_TEXTO
-;
-// KD_VALUE = "value":
-value ::= KD_VALUE MI_INTEGER
-;
-// KD_COLOR = "color":
-color ::= KD_COLOR MI_COLOR
-;
-// KD_XLABEL = "xAxisLabel":
-xLabel ::= KD_XLABEL MI_TEXTO
-;
-// KD_YLABEL = "yAxisLabel":
-yLabel ::= KD_YLABEL MI_TEXTO
-;
-// KD_LEGEND = "legendPosition":
-legend ::= KD_LEGEND MI_TEXTO
-;
-// KD_X = "x":
-xValue ::= KD_X MI_INTEGER
-;
-// KD_Y = "y":
-yValue ::= KD_Y MI_INTEGER
-;
-// KD_SIZE = "size":
-size ::= KD_SIZE MI_INTEGER
-;
-
 // KD_HEADER = "header":
-header ::= KD_HEADER IZQLLAVE title DERLLAVE
+header ::= KD_HEADER IZQLLAVE title:w1 DERLLAVE {: RESULT=w1; :}
 ;
 // KD_FOOTER = "footer":
-footer ::= KD_FOOTER IZQLLAVE copyright DERLLAVE
+footer ::= KD_FOOTER IZQLLAVE copyright:w1 DERLLAVE {: RESULT=w1; :}
 ;
+// KD_BACKGR = "backgroundColor":
+backgr ::= KD_BACKGR MI_COLOR:w1 {: RESULT=w1; :}
+;
+// KD_FONTFAM = "fontFamily":
+fontFam ::= KD_FONTFAM MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_FONTSIZE = "fontSize":
+fontSize ::= KD_FONTSIZE MI_TEXTO:w1 {: RESULT=w1; :}
+;
+
+
+// BARRAS.DATA
+
+// KD_CATEGORY = "category":
+category ::= KD_CATEGORY MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_VALUE = "value":
+value ::= KD_VALUE MI_INTEGER:w1 {: RESULT=w1; :}
+;
+// KD_COLOR = "color":
+color ::= KD_COLOR MI_COLOR:w1 {: RESULT=w1; :}
+;
+
+// KD_LINE = "lineStyle":
+lineStyle ::= KD_LINE MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_NAME = "name":
+name ::= KD_NAME MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_LABEL = "label":
+label ::= KD_LABEL MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_ICON = "icon":
+icon ::= KD_ICON MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_LINK = "link":
+link ::= KD_LINK MI_URL:w1 {: RESULT=w1; :}
+;
+// KD_COPYR = "copyright":
+copyright ::= KD_COPYR MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_XLABEL = "xAxisLabel":
+xLabel ::= KD_XLABEL MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_YLABEL = "yAxisLabel":
+yLabel ::= KD_YLABEL MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_LEGEND = "legendPosition":
+legend ::= KD_LEGEND MI_TEXTO:w1 {: RESULT=w1; :}
+;
+// KD_X = "x":
+xValue ::= KD_X MI_INTEGER:w1 {: RESULT=w1; :}
+;
+// KD_Y = "y":
+yValue ::= KD_Y MI_INTEGER:w1 {: RESULT=w1; :}
+;
+// KD_SIZE = "size":
+size ::= KD_SIZE MI_INTEGER:w1 {: RESULT=w1; :}
+;
+
 // KD_CHART = "chart":
-chart ::= KD_CHART IZQLLAVE title COMA xLabel COMA yLabel DERLLAVE
+chart ::= KD_CHART IZQLLAVE title:w1 COMA xLabel:w2 COMA yLabel:w3 DERLLAVE {: RESULT= new Chart1(w1,w2,w3); :}
 ;
-pastelXtChart ::= KD_CHART IZQLLAVE title COMA legend DERLLAVE
+pastelXtChart ::= KD_CHART IZQLLAVE title:w1 COMA legend:w2 DERLLAVE {: RESULT= new Chart2(w1,w2); :}
 ;
 
 // usado en properties
