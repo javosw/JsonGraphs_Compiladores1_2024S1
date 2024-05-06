@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class Dashb {
-    String titlePage;
-    String descr;
-    Set<String> keywords;
-    String titleHeader;
-    String rights;
-    String colorBackgr;
-    String fonts;
-    String fontSize;
-    ArrayList<Object> graficos;
+    private String titlePage;
+    private String descr;
+    private Set<String> keywords;
+    private String titleHeader;
+    private String rights;
+    private String colorBackgr;
+    private String fonts;
+    private String fontSize;
+    private ArrayList<Object> graficos;
+
+
+
+
+
 
 /*
     barras
@@ -26,6 +31,11 @@ public class Dashb {
     tarjeta
     tarjetaXt
 */
+    public static Dashb newDashb()
+    {
+        
 
+        return new Dashb();
+    }
 
 }

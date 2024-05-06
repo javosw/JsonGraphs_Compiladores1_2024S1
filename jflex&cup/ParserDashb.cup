@@ -5,11 +5,7 @@ package josq.lenguajes.automatas;
 
 import java.util.ArrayList;
 //import java_cup.runtime.*;
-import josq.lenguajes.modelos.Barras;
-import josq.lenguajes.modelos.Index;
-import josq.lenguajes.modelos.Par;
-import josq.lenguajes.modelos.BarrasXt;
-import josq.lenguajes.modelos.Chart1;
+import josq.lenguajes.modelos.*;
 
 // NOTA: %cupsym en jflex
 // parser=MyParser, sym=MyParserSym
@@ -72,78 +68,75 @@ terminal KD_NAME ;
 
 // #%#%#%#% NO TERMINALES #%#%#%#%
 
-non terminal String title, description, keywords, header, footer, backgr, fontFam, fontSize ;
 non terminal ArrayList<Par> dashboard, content, content2, content3 ;
-non terminal ArrayList<Par> properties, propertyList ;
+
+non terminal String title, description, header, footer, backgr, fontFam, fontSize ;
 non terminal Par property ;
+non terminal ArrayList<Par> properties, propertyList ;
+
 non terminal Object grafico ;
 non terminal ArrayList<Object> graficos ;
+
 non terminal Barras barras ;
 non terminal Barras.Data barrasDataValue ;
 non terminal ArrayList<Barras.Data> barrasData, barrasDataList, barrasDataList2 ;
+
 non terminal BarrasXt barrasXt ;
 non terminal BarrasXt.Data barrasXtDataValue ;
 non terminal ArrayList<BarrasXt.Data> barrasXtData, barrasXtDataList, barrasXtDataList2 ;
+
 non terminal Pastel pastel ;
-non terminal ArrayList<Pastel.Data> pastelData, pastelDataList, pastelDataList2 ;
 non terminal Pastel.Data pastelDataValue ;
+non terminal ArrayList<Pastel.Data> pastelData, pastelDataList, pastelDataList2 ;
+
 non terminal PastelXt pastelXt ;
 non terminal PastelXt.Data pastelXtDataValue ;
-non terminal pastelXtData, pastelXtDataList, pastelXtDataList2 ;
+non terminal ArrayList<PastelXt.Data> pastelXtData, pastelXtDataList, pastelXtDataList2 ;
+
 non terminal Chart2 pastelXtChart ;
-non terminal puntos ;
-non terminal puntosData ;
-non terminal puntosDataList ;
-non terminal puntosDataList2 ;
-non terminal puntosDataValue ;
-non terminal puntosXt ;
-non terminal puntosXtData ;
-non terminal puntosXtDataList ;
-non terminal puntosXtDataList2 ;
-non terminal puntosXtDataValue ;
-non terminal lineas ;
-non terminal lineasData ;
-non terminal lineasDataList ;
-non terminal lineasDataValue ;
-non terminal lineasDataList2 ;
-non terminal lineasXt ;
-non terminal lineasXtData ;
-non terminal lineasXtDataList ;
-non terminal lineasXtDataValue ;
-non terminal lineasXtDataList2 ;
-non terminal tarjeta ;
-non terminal tarjetaData ;
-non terminal tarjetaXt ;
+
+non terminal Chart1 chart ;
+
+non terminal Puntos puntos ;
+non terminal Puntos.Data puntosDataValue ;
+non terminal ArrayList<Puntos.Data> puntosData, puntosDataList, puntosDataList2 ;
+
+non terminal PuntosXt puntosXt ;
+non terminal PuntosXt.Data puntosXtDataValue ;
+non terminal ArrayList<PuntosXt.Data> puntosXtData, puntosXtDataList, puntosXtDataList2 ;
+
+non terminal Lineas lineas ;
+non terminal Lineas.Data lineasDataValue ;
+non terminal ArrayList<Lineas.Data> lineasData, lineasDataList, lineasDataList2  ;
+
+non terminal LineasXt lineasXt ;
+non terminal LineasXt.Data lineasXtDataValue ;
+non terminal ArrayList<LineasXt.Data> lineasXtData, lineasXtDataList, lineasXtDataList2 ;
+
+non terminal Tarjeta tarjeta, tarjetaData ;
+non terminal TarjetaXt tarjetaXt, tarjetaXtData ;
 
 non terminal String category, value ;
-non terminal Chart1 chart ;
 non terminal String xLabel, yLabel ;
-
 non terminal String color ;
 non terminal String legend ;
 non terminal String xValue ;
 non terminal String yValue ;
 non terminal String name ;
 non terminal String size ;
-
 non terminal String label ;
 non terminal String icon ;
 non terminal String link ;
 non terminal String copyright ;
+non terminal String lineStyle ; 
 
+non terminal ArrayList<String> keywords, keywordList, keywordList2 ;
 
-non terminal keywordList ;
-non terminal keywordList2 ;
-non terminal points ;
-non terminal pointList ;
-non terminal pointValue ;
-non terminal pointList2 ;
-non terminal pointsXt ;
-non terminal pointXtList ;
-non terminal pointXtList2 ;
-non terminal pointXtValue ;
-non terminal lineStyle ; 
+non terminal Lineas.Data.Punto pointValue ;
+non terminal ArrayList<Lineas.Data.Punto> points, pointList, pointList2 ;
 
+non terminal LineasXt.Data.Punto pointXtValue ;
+non terminal ArrayList<LineasXt.Data.Punto> pointsXt, pointXtList, pointXtList2 ;
 
 
 // PRODUCCIONES
@@ -172,6 +165,10 @@ properties ::=
     property:w1 {: ArrayList<Par> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
     | propertyList:w1 property:w2 {: w1.add(w2); RESULT=w1; :}
 ;
+propertyList ::=
+    property:w1 COMA {: ArrayList<Par> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | propertyList:w1 property:w2 COMA {: w1.add(w2); RESULT=w1; :}
+;
 property ::= 
     title:w1         {: RESULT= new Par(Index.KD_TITLE,w1); :}
     | description:w1 {: RESULT= new Par(Index.KD_DESCRIP,w1); :}
@@ -181,10 +178,6 @@ property ::=
     | backgr:w1      {: RESULT= new Par(Index.KD_BACKGR,w1); :}
     | fontFam:w1     {: RESULT= new Par(Index.KD_FONTFAM,w1); :}
     | fontSize:w1    {: RESULT= new Par(Index.KD_FONTSIZE,w1); :}
-;
-propertyList ::=
-    property:w1 COMA {: ArrayList<Par> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | propertyList:w1 property:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
 
 // GRAFICOS >>>>>>>>>>>>>>>>>>>
@@ -217,14 +210,15 @@ barrasDataList ::=
     barrasDataValue:w1 {: ArrayList<Barras.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
     | barrasDataList2:w1 barrasDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
-barrasDataValue ::=
-    IZQLLAVE category:w1 COMA value:w2 DERLLAVE {: RESULT= new Barras.Data(w1,w2); :}
-    | IZQLLAVE value:w2 COMA category:w1 DERLLAVE {: RESULT= new Barras.Data(w1,w2); :}
-;
 barrasDataList2 ::=
     barrasDataValue:w1 COMA {: ArrayList<Barras.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
     | barrasDataList2:w1 barrasDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
+barrasDataValue ::=
+    IZQLLAVE category:w1 COMA value:w2 DERLLAVE {: RESULT= new Barras.Data(w1,w2); :}
+    | IZQLLAVE value:w2 COMA category:w1 DERLLAVE {: RESULT= new Barras.Data(w1,w2); :}
+;
+
 // barrasXt
 barrasXt ::= IZQLLAVE barrasXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new BarrasXt(w1,w2); :}
 ;
@@ -234,6 +228,10 @@ barrasXtDataList ::=
     barrasXtDataValue:w1 {: ArrayList<BarrasXt.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
     | barrasXtDataList2:w1 barrasXtDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
+barrasXtDataList2 ::=
+    barrasXtDataValue:w1 COMA {: ArrayList<BarrasXt.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | barrasXtDataList2:w1 barrasXtDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
+;
 barrasXtDataValue ::=
     IZQLLAVE category:w1 COMA value:w2 COMA color:w3 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
     | IZQLLAVE category:w1 COMA color:w3 COMA value:w2 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
@@ -241,10 +239,6 @@ barrasXtDataValue ::=
     | IZQLLAVE value:w2 COMA color:w3 COMA category:w1 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
     | IZQLLAVE color:w3 COMA value:w2 COMA category:w1 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
     | IZQLLAVE color:w3 COMA category:w1 COMA value:w2 DERLLAVE {: RESULT= new BarrasXt.Data(w1,w2,w3); :}
-;
-barrasXtDataList2 ::=
-    barrasXtDataValue:w1 COMA {: ArrayList<BarrasXt.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | barrasXtDataList2:w1 barrasXtDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
 
 // PASTEL >>>>>>>>>>>>>>>>>>>
@@ -274,6 +268,10 @@ pastelXtDataList ::=
     pastelXtDataValue:w1 {: ArrayList<PastelXt.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
     | pastelXtDataList2:w1 pastelXtDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
+pastelXtDataList2 ::=
+    pastelXtDataValue:w1 COMA {: ArrayList<PastelXt.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pastelXtDataList2:w1 pastelXtDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
+;
 pastelXtDataValue ::= 
     IZQLLAVE label:w1 COMA value:w2 COMA color:w3 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
     | IZQLLAVE label:w1 COMA color:w3 COMA value:w2 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
@@ -282,83 +280,861 @@ pastelXtDataValue ::=
     | IZQLLAVE color:w3 COMA value:w2 COMA label:w1 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
     | IZQLLAVE color:w3 COMA label:w1 COMA value:w2 DERLLAVE {: RESULT= new PastelXt.Data(w1,w2,w3); :}
 ;
-pastelXtDataList2 ::=
-    pastelXtDataValue:w1 COMA {: ArrayList<PastelXt.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | pastelXtDataList2:w1 pastelXtDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
-;
 
 // PUNTOS >>>>>>>>>>>>>>>>>>>
 // puntos
-puntos ::= IZQLLAVE puntosData DERLLAVE
+puntos ::= IZQLLAVE puntosData:w1 DERLLAVE {: RESULT= new Puntos(w1); :}
 ;
-puntosData ::= KD_DATA IZQCORCH puntosDataList DERCORCH
+puntosData ::= KD_DATA IZQCORCH puntosDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
 puntosDataList ::= 
-    puntosDataValue 
-    | puntosDataList2 puntosDataValue
-;
-puntosDataValue ::= IZQLLAVE xValue COMA yValue DERLLAVE 
+    puntosDataValue:w1 {: ArrayList<Puntos.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | puntosDataList2:w1 puntosDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 puntosDataList2 ::=
-    puntosDataValue COMA
-    | puntosDataList2 puntosDataValue COMA
+    puntosDataValue:w1 COMA {: ArrayList<Puntos.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | puntosDataList2:w1 puntosDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
+;
+puntosDataValue ::= 
+    IZQLLAVE xValue:w1 COMA yValue:w2 DERLLAVE {: RESULT= new Puntos.Data(w1,w2); :}
+    | IZQLLAVE yValue:w2 COMA xValue:w1 DERLLAVE {: RESULT= new Puntos.Data(w1,w2); :}
 ;
 // puntosXt
-puntosXt ::= IZQLLAVE puntosXtData COMA chart DERLLAVE
+puntosXt ::= IZQLLAVE puntosXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new PuntosXt(w1,w2); :}
 ;
-puntosXtData ::= KD_DATA IZQCORCH puntosXtDataList DERCORCH
+puntosXtData ::= KD_DATA IZQCORCH puntosXtDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
 puntosXtDataList ::= 
-    puntosXtDataValue
-    | puntosXtDataList2 puntosXtDataValue
-;
-puntosXtDataValue ::= IZQLLAVE xValue COMA yValue COMA size COMA color DERLLAVE
+    puntosXtDataValue:w1 {: ArrayList<PuntosXt.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | puntosXtDataList2:w1 puntosXtDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 puntosXtDataList2 ::= 
-    puntosXtDataValue COMA
-    | puntosXtDataList2 puntosXtDataValue COMA
+    puntosXtDataValue:w1 COMA {: ArrayList<PuntosXt.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | puntosXtDataList2:w1 puntosXtDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
+;
+puntosXtDataValue ::= 
+    IZQLLAVE xValue:w1 COMA yValue:w2 COMA size:w3 COMA color:w4 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE xValue:w1 COMA yValue:w2 COMA color:w4 COMA size:w3 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE xValue:w1 COMA size:w3 COMA yValue:w2 COMA color:w4 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE xValue:w1 COMA size:w3 COMA color:w4 COMA yValue:w2 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE xValue:w1 COMA color:w4 COMA size:w3 COMA yValue:w2 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE xValue:w1 COMA color:w4 COMA yValue:w2 COMA size:w3 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE yValue:w2 COMA xValue:w1 COMA size:w3 COMA color:w4 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE yValue:w2 COMA xValue:w1 COMA color:w4 COMA size:w3 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE yValue:w2 COMA size:w3 COMA xValue:w1 COMA color:w4 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE yValue:w2 COMA size:w3 COMA color:w4 COMA xValue:w1 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE yValue:w2 COMA color:w4 COMA size:w3 COMA xValue:w1 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE yValue:w2 COMA color:w4 COMA xValue:w1 COMA size:w3 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE size:w3 COMA yValue:w2 COMA xValue:w1 COMA color:w4 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE size:w3 COMA yValue:w2 COMA color:w4 COMA xValue:w1 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE size:w3 COMA xValue:w1 COMA yValue:w2 COMA color:w4 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE size:w3 COMA xValue:w1 COMA color:w4 COMA yValue:w2 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE size:w3 COMA color:w4 COMA xValue:w1 COMA yValue:w2 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE size:w3 COMA color:w4 COMA yValue:w2 COMA xValue:w1 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w4 COMA yValue:w2 COMA size:w3 COMA xValue:w1 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w4 COMA yValue:w2 COMA xValue:w1 COMA size:w3 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w4 COMA size:w3 COMA yValue:w2 COMA xValue:w1 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w4 COMA size:w3 COMA xValue:w1 COMA yValue:w2 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w4 COMA xValue:w1 COMA size:w3 COMA yValue:w2 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w4 COMA xValue:w1 COMA yValue:w2 COMA size:w3 DERLLAVE {: RESULT= new PuntosXt.Data(w1,w2,w3,w4); :}
 ;
 
 // LINEAS >>>>>>>>>>>>>>>>>>>
 // lineas
-lineas ::= IZQLLAVE lineasData COMA chart DERLLAVE 
+lineas ::= IZQLLAVE lineasData:w1 COMA chart:w2 DERLLAVE {: RESULT= new Lineas(w1,w2); :}
 ;
-lineasData ::= KD_DATA IZQCORCH lineasDataList DERCORCH
+lineasData ::= KD_DATA IZQCORCH lineasDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
 lineasDataList ::= 
-    lineasDataValue 
-    | lineasDataList2 lineasDataValue
-;
-lineasDataValue ::= IZQLLAVE name COMA points DERLLAVE
+    lineasDataValue:w1 {: ArrayList<Lineas.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | lineasDataList2:w1 lineasDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 lineasDataList2 ::=
-    lineasDataValue COMA
-    | lineasDataList2 lineasDataValue COMA
+    lineasDataValue:w1 COMA {: ArrayList<Lineas.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | lineasDataList2:w1 lineasDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
+lineasDataValue ::= 
+    IZQLLAVE name:w1 COMA points:w2 DERLLAVE {: RESULT= new Lineas.Data(w1,w2); :}
+    | IZQLLAVE points:w2 COMA name:w1 DERLLAVE {: RESULT= new Lineas.Data(w1,w2); :}
+;
+
 // lineasXt
-lineasXt ::= IZQLLAVE lineasXtData COMA chart DERLLAVE 
+lineasXt ::= IZQLLAVE lineasXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new LineasXt(w1,w2); :}
 ;
-lineasXtData ::= KD_DATA IZQCORCH lineasXtDataList DERCORCH
+lineasXtData ::= KD_DATA IZQCORCH lineasXtDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
 lineasXtDataList ::= 
-    lineasXtDataValue 
-    | lineasXtDataList2 lineasXtDataValue
-;
-lineasXtDataValue ::= IZQLLAVE name COMA pointsXt COMA color COMA lineStyle DERLLAVE
+    lineasXtDataValue:w1 {: ArrayList<LineasXt.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | lineasXtDataList2:w1 lineasXtDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 lineasXtDataList2 ::=
-    lineasXtDataValue COMA
-    | lineasXtDataList2 lineasXtDataValue COMA
+    lineasXtDataValue:w1 COMA {: ArrayList<LineasXt.Data> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | lineasXtDataList2:w1 lineasXtDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
+;
+lineasXtDataValue ::= 
+    IZQLLAVE name:w1 COMA pointsXt:w2 COMA color:w3 COMA lineStyle:w4 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE name:w1 COMA pointsXt:w2 COMA lineStyle:w4 COMA color:w3 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE name:w1 COMA color:w3 COMA pointsXt:w2 COMA lineStyle:w4 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE name:w1 COMA color:w3 COMA lineStyle:w4 COMA pointsXt:w2 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE name:w1 COMA lineStyle:w4 COMA color:w3 COMA pointsXt:w2 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE name:w1 COMA lineStyle:w4 COMA pointsXt:w2 COMA color:w3 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE pointsXt:w2 COMA name:w1 COMA color:w3 COMA lineStyle:w4 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE pointsXt:w2 COMA name:w1 COMA lineStyle:w4 COMA color:w3 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE pointsXt:w2 COMA color:w3 COMA name:w1 COMA lineStyle:w4 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE pointsXt:w2 COMA color:w3 COMA lineStyle:w4 COMA name:w1 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE pointsXt:w2 COMA lineStyle:w4 COMA color:w3 COMA name:w1 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE pointsXt:w2 COMA lineStyle:w4 COMA name:w1 COMA color:w3 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w3 COMA pointsXt:w2 COMA name:w1 COMA lineStyle:w4 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w3 COMA pointsXt:w2 COMA lineStyle:w4 COMA name:w1 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w3 COMA name:w1 COMA pointsXt:w2 COMA lineStyle:w4 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w3 COMA name:w1 COMA lineStyle:w4 COMA pointsXt:w2 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w3 COMA lineStyle:w4 COMA name:w1 COMA pointsXt:w2 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE color:w3 COMA lineStyle:w4 COMA pointsXt:w2 COMA name:w1 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE lineStyle:w4 COMA pointsXt:w2 COMA color:w3 COMA name:w1 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE lineStyle:w4 COMA pointsXt:w2 COMA name:w1 COMA color:w3 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE lineStyle:w4 COMA color:w3 COMA pointsXt:w2 COMA name:w1 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE lineStyle:w4 COMA color:w3 COMA name:w1 COMA pointsXt:w2 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE lineStyle:w4 COMA name:w1 COMA color:w3 COMA pointsXt:w2 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
+    | IZQLLAVE lineStyle:w4 COMA name:w1 COMA pointsXt:w2 COMA color:w3 DERLLAVE {: RESULT= new LineasXt.Data(w1,w2,w3,w4); :}
 ;
 
 // TARJETA >>>>>>>>>>>>>>>>>>>
-tarjeta ::= IZQLLAVE tarjetaData DERLLAVE
+tarjeta ::= IZQLLAVE KD_DATA IZQLLAVE tarjetaData:w1 DERLLAVE DERLLAVE {: RESULT=w1; :}
 ;
-tarjetaData ::= KD_DATA IZQLLAVE value COMA label COMA description DERLLAVE
+tarjetaData ::= 
+    value:w1 COMA label:w2 COMA description:w3 {: RESULT= new Tarjeta(w1,w2,w3); :}
+    | value:w1 COMA description:w3 COMA label:w2 {: RESULT= new Tarjeta(w1,w2,w3); :}
+    | label:w2 COMA value:w1 COMA description:w3 {: RESULT= new Tarjeta(w1,w2,w3); :}
+    | label:w2 COMA description:w3 COMA value:w1 {: RESULT= new Tarjeta(w1,w2,w3); :}
+    | description:w3 COMA label:w2 COMA value:w1 {: RESULT= new Tarjeta(w1,w2,w3); :}
+    | description:w3 COMA value:w1 COMA label:w2 {: RESULT= new Tarjeta(w1,w2,w3); :}
 ;
-tarjetaXt ::= KD_DATA IZQLLAVE value COMA label COMA description COMA icon COMA color COMA link DERLLAVE
+tarjetaXt ::= IZQLLAVE KD_DATA IZQLLAVE tarjetaXtData:w1 DERLLAVE DERLLAVE {: RESULT=w1; :}
 ;
-
+tarjetaXtData ::= 
+    value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    /*
+    | value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA description:w3 COMA color:w5 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA description:w3 COMA color:w5 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA description:w3 COMA link:w6 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA description:w3 COMA link:w6 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA icon:w4 COMA description:w3 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA icon:w4 COMA description:w3 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA icon:w4 COMA color:w5 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA icon:w4 COMA color:w5 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA icon:w4 COMA link:w6 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA icon:w4 COMA link:w6 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA color:w5 COMA icon:w4 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA color:w5 COMA icon:w4 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA color:w5 COMA description:w3 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA color:w5 COMA description:w3 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA color:w5 COMA link:w6 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA color:w5 COMA link:w6 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA link:w6 COMA icon:w4 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA link:w6 COMA icon:w4 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA link:w6 COMA color:w5 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA link:w6 COMA color:w5 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA link:w6 COMA description:w3 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA label:w2 COMA link:w6 COMA description:w3 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA label:w2 COMA icon:w4 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA label:w2 COMA icon:w4 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA label:w2 COMA color:w5 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA label:w2 COMA color:w5 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA label:w2 COMA link:w6 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA label:w2 COMA link:w6 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA icon:w4 COMA label:w2 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA icon:w4 COMA label:w2 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA icon:w4 COMA color:w5 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA icon:w4 COMA color:w5 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA icon:w4 COMA link:w6 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA icon:w4 COMA link:w6 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA color:w5 COMA icon:w4 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA color:w5 COMA icon:w4 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA color:w5 COMA label:w2 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA color:w5 COMA label:w2 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA color:w5 COMA link:w6 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA color:w5 COMA link:w6 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA link:w6 COMA icon:w4 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA link:w6 COMA icon:w4 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA link:w6 COMA color:w5 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA link:w6 COMA color:w5 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA link:w6 COMA label:w2 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA description:w3 COMA link:w6 COMA label:w2 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA description:w3 COMA label:w2 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA description:w3 COMA label:w2 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA description:w3 COMA color:w5 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA description:w3 COMA color:w5 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA description:w3 COMA link:w6 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA description:w3 COMA link:w6 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA label:w2 COMA description:w3 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA label:w2 COMA description:w3 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA label:w2 COMA color:w5 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA label:w2 COMA color:w5 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA label:w2 COMA link:w6 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA label:w2 COMA link:w6 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA color:w5 COMA label:w2 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA color:w5 COMA label:w2 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA color:w5 COMA description:w3 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA color:w5 COMA description:w3 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA color:w5 COMA link:w6 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA color:w5 COMA link:w6 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA link:w6 COMA label:w2 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA link:w6 COMA label:w2 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA link:w6 COMA color:w5 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA link:w6 COMA color:w5 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA link:w6 COMA description:w3 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA icon:w4 COMA link:w6 COMA description:w3 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA description:w3 COMA icon:w4 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA description:w3 COMA icon:w4 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA description:w3 COMA label:w2 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA description:w3 COMA label:w2 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA description:w3 COMA link:w6 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA description:w3 COMA link:w6 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA icon:w4 COMA description:w3 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA icon:w4 COMA description:w3 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA icon:w4 COMA label:w2 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA icon:w4 COMA label:w2 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA icon:w4 COMA link:w6 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA icon:w4 COMA link:w6 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA label:w2 COMA icon:w4 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA label:w2 COMA icon:w4 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA label:w2 COMA description:w3 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA label:w2 COMA description:w3 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA label:w2 COMA link:w6 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA label:w2 COMA link:w6 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA link:w6 COMA icon:w4 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA link:w6 COMA icon:w4 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA link:w6 COMA label:w2 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA link:w6 COMA label:w2 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA link:w6 COMA description:w3 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA color:w5 COMA link:w6 COMA description:w3 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA description:w3 COMA icon:w4 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA description:w3 COMA icon:w4 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA description:w3 COMA color:w5 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA description:w3 COMA color:w5 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA description:w3 COMA label:w2 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA description:w3 COMA label:w2 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA icon:w4 COMA description:w3 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA icon:w4 COMA description:w3 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA icon:w4 COMA color:w5 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA icon:w4 COMA color:w5 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA icon:w4 COMA label:w2 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA icon:w4 COMA label:w2 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA color:w5 COMA icon:w4 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA color:w5 COMA icon:w4 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA color:w5 COMA description:w3 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA color:w5 COMA description:w3 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA color:w5 COMA label:w2 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA color:w5 COMA label:w2 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA label:w2 COMA icon:w4 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA label:w2 COMA icon:w4 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA label:w2 COMA color:w5 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA label:w2 COMA color:w5 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA label:w2 COMA description:w3 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | value:w1 COMA link:w6 COMA label:w2 COMA description:w3 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA description:w3 COMA icon:w4 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA description:w3 COMA icon:w4 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA description:w3 COMA color:w5 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA description:w3 COMA color:w5 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA description:w3 COMA link:w6 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA description:w3 COMA link:w6 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA icon:w4 COMA description:w3 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA icon:w4 COMA description:w3 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA icon:w4 COMA color:w5 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA icon:w4 COMA color:w5 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA icon:w4 COMA link:w6 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA icon:w4 COMA link:w6 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA color:w5 COMA icon:w4 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA color:w5 COMA icon:w4 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA color:w5 COMA description:w3 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA color:w5 COMA description:w3 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA color:w5 COMA link:w6 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA color:w5 COMA link:w6 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA link:w6 COMA icon:w4 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA link:w6 COMA icon:w4 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA link:w6 COMA color:w5 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA link:w6 COMA color:w5 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA link:w6 COMA description:w3 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA value:w1 COMA link:w6 COMA description:w3 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA value:w1 COMA icon:w4 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA value:w1 COMA icon:w4 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA value:w1 COMA color:w5 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA value:w1 COMA color:w5 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA value:w1 COMA link:w6 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA value:w1 COMA link:w6 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA icon:w4 COMA value:w1 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA icon:w4 COMA value:w1 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA icon:w4 COMA color:w5 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA icon:w4 COMA color:w5 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA icon:w4 COMA link:w6 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA icon:w4 COMA link:w6 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA color:w5 COMA icon:w4 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA color:w5 COMA icon:w4 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA color:w5 COMA value:w1 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA color:w5 COMA value:w1 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA color:w5 COMA link:w6 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA color:w5 COMA link:w6 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA link:w6 COMA icon:w4 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA link:w6 COMA icon:w4 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA link:w6 COMA color:w5 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA link:w6 COMA color:w5 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA link:w6 COMA value:w1 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA description:w3 COMA link:w6 COMA value:w1 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA description:w3 COMA value:w1 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA description:w3 COMA value:w1 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA description:w3 COMA color:w5 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA description:w3 COMA color:w5 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA description:w3 COMA link:w6 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA description:w3 COMA link:w6 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA value:w1 COMA description:w3 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA value:w1 COMA description:w3 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA value:w1 COMA color:w5 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA value:w1 COMA color:w5 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA value:w1 COMA link:w6 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA value:w1 COMA link:w6 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA color:w5 COMA value:w1 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA color:w5 COMA value:w1 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA color:w5 COMA description:w3 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA color:w5 COMA description:w3 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA color:w5 COMA link:w6 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA color:w5 COMA link:w6 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA link:w6 COMA value:w1 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA link:w6 COMA value:w1 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA link:w6 COMA color:w5 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA link:w6 COMA color:w5 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA link:w6 COMA description:w3 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA icon:w4 COMA link:w6 COMA description:w3 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA description:w3 COMA icon:w4 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA description:w3 COMA icon:w4 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA description:w3 COMA value:w1 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA description:w3 COMA value:w1 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA description:w3 COMA link:w6 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA description:w3 COMA link:w6 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA icon:w4 COMA description:w3 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA icon:w4 COMA description:w3 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA icon:w4 COMA value:w1 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA icon:w4 COMA value:w1 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA icon:w4 COMA link:w6 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA icon:w4 COMA link:w6 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA value:w1 COMA icon:w4 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA value:w1 COMA icon:w4 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA value:w1 COMA description:w3 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA value:w1 COMA description:w3 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA value:w1 COMA link:w6 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA value:w1 COMA link:w6 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA link:w6 COMA icon:w4 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA link:w6 COMA icon:w4 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA link:w6 COMA value:w1 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA link:w6 COMA value:w1 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA link:w6 COMA description:w3 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA color:w5 COMA link:w6 COMA description:w3 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA description:w3 COMA icon:w4 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA description:w3 COMA icon:w4 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA description:w3 COMA color:w5 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA description:w3 COMA color:w5 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA description:w3 COMA value:w1 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA description:w3 COMA value:w1 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA icon:w4 COMA description:w3 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA icon:w4 COMA description:w3 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA icon:w4 COMA color:w5 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA icon:w4 COMA color:w5 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA icon:w4 COMA value:w1 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA icon:w4 COMA value:w1 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA color:w5 COMA icon:w4 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA color:w5 COMA icon:w4 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA color:w5 COMA description:w3 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA color:w5 COMA description:w3 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA color:w5 COMA value:w1 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA color:w5 COMA value:w1 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA value:w1 COMA icon:w4 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA value:w1 COMA icon:w4 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA value:w1 COMA color:w5 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA value:w1 COMA color:w5 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA value:w1 COMA description:w3 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | label:w2 COMA link:w6 COMA value:w1 COMA description:w3 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA value:w1 COMA icon:w4 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA value:w1 COMA icon:w4 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA value:w1 COMA color:w5 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA value:w1 COMA color:w5 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA value:w1 COMA link:w6 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA value:w1 COMA link:w6 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA icon:w4 COMA value:w1 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA icon:w4 COMA value:w1 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA icon:w4 COMA color:w5 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA icon:w4 COMA color:w5 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA icon:w4 COMA link:w6 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA icon:w4 COMA link:w6 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA color:w5 COMA icon:w4 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA color:w5 COMA icon:w4 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA color:w5 COMA value:w1 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA color:w5 COMA value:w1 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA color:w5 COMA link:w6 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA color:w5 COMA link:w6 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA link:w6 COMA icon:w4 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA link:w6 COMA icon:w4 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA link:w6 COMA color:w5 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA link:w6 COMA color:w5 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA link:w6 COMA value:w1 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA label:w2 COMA link:w6 COMA value:w1 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA label:w2 COMA icon:w4 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA label:w2 COMA icon:w4 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA label:w2 COMA color:w5 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA label:w2 COMA color:w5 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA label:w2 COMA link:w6 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA label:w2 COMA link:w6 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA icon:w4 COMA label:w2 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA icon:w4 COMA label:w2 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA icon:w4 COMA color:w5 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA icon:w4 COMA color:w5 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA icon:w4 COMA link:w6 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA icon:w4 COMA link:w6 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA color:w5 COMA icon:w4 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA color:w5 COMA icon:w4 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA color:w5 COMA label:w2 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA color:w5 COMA label:w2 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA color:w5 COMA link:w6 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA color:w5 COMA link:w6 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA link:w6 COMA icon:w4 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA link:w6 COMA icon:w4 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA link:w6 COMA color:w5 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA link:w6 COMA color:w5 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA link:w6 COMA label:w2 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA value:w1 COMA link:w6 COMA label:w2 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA value:w1 COMA label:w2 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA value:w1 COMA label:w2 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA value:w1 COMA color:w5 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA value:w1 COMA color:w5 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA value:w1 COMA link:w6 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA value:w1 COMA link:w6 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA label:w2 COMA value:w1 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA label:w2 COMA value:w1 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA label:w2 COMA color:w5 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA label:w2 COMA color:w5 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA label:w2 COMA link:w6 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA label:w2 COMA link:w6 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA color:w5 COMA label:w2 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA color:w5 COMA label:w2 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA color:w5 COMA value:w1 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA color:w5 COMA value:w1 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA color:w5 COMA link:w6 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA color:w5 COMA link:w6 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA link:w6 COMA label:w2 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA link:w6 COMA label:w2 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA link:w6 COMA color:w5 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA link:w6 COMA color:w5 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA link:w6 COMA value:w1 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA icon:w4 COMA link:w6 COMA value:w1 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA value:w1 COMA icon:w4 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA value:w1 COMA icon:w4 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA value:w1 COMA label:w2 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA value:w1 COMA label:w2 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA value:w1 COMA link:w6 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA value:w1 COMA link:w6 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA icon:w4 COMA value:w1 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA icon:w4 COMA value:w1 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA icon:w4 COMA label:w2 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA icon:w4 COMA label:w2 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA icon:w4 COMA link:w6 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA icon:w4 COMA link:w6 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA label:w2 COMA icon:w4 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA label:w2 COMA icon:w4 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA label:w2 COMA value:w1 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA label:w2 COMA value:w1 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA label:w2 COMA link:w6 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA label:w2 COMA link:w6 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA link:w6 COMA icon:w4 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA link:w6 COMA icon:w4 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA link:w6 COMA label:w2 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA link:w6 COMA label:w2 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA link:w6 COMA value:w1 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA color:w5 COMA link:w6 COMA value:w1 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA value:w1 COMA icon:w4 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA value:w1 COMA icon:w4 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA value:w1 COMA color:w5 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA value:w1 COMA color:w5 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA value:w1 COMA label:w2 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA value:w1 COMA label:w2 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA icon:w4 COMA value:w1 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA icon:w4 COMA value:w1 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA icon:w4 COMA color:w5 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA icon:w4 COMA color:w5 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA icon:w4 COMA label:w2 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA icon:w4 COMA label:w2 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA color:w5 COMA icon:w4 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA color:w5 COMA icon:w4 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA color:w5 COMA value:w1 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA color:w5 COMA value:w1 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA color:w5 COMA label:w2 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA color:w5 COMA label:w2 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA label:w2 COMA icon:w4 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA label:w2 COMA icon:w4 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA label:w2 COMA color:w5 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA label:w2 COMA color:w5 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA label:w2 COMA value:w1 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | description:w3 COMA link:w6 COMA label:w2 COMA value:w1 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA description:w3 COMA value:w1 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA description:w3 COMA value:w1 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA description:w3 COMA color:w5 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA description:w3 COMA color:w5 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA description:w3 COMA link:w6 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA description:w3 COMA link:w6 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA value:w1 COMA description:w3 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA value:w1 COMA description:w3 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA value:w1 COMA color:w5 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA value:w1 COMA color:w5 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA value:w1 COMA link:w6 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA value:w1 COMA link:w6 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA color:w5 COMA value:w1 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA color:w5 COMA value:w1 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA color:w5 COMA description:w3 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA color:w5 COMA description:w3 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA color:w5 COMA link:w6 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA color:w5 COMA link:w6 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA link:w6 COMA value:w1 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA link:w6 COMA value:w1 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA link:w6 COMA color:w5 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA link:w6 COMA color:w5 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA link:w6 COMA description:w3 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA label:w2 COMA link:w6 COMA description:w3 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA label:w2 COMA value:w1 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA label:w2 COMA value:w1 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA label:w2 COMA color:w5 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA label:w2 COMA color:w5 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA label:w2 COMA link:w6 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA label:w2 COMA link:w6 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA value:w1 COMA label:w2 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA value:w1 COMA label:w2 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA value:w1 COMA color:w5 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA value:w1 COMA color:w5 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA value:w1 COMA link:w6 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA value:w1 COMA link:w6 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA color:w5 COMA value:w1 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA color:w5 COMA value:w1 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA color:w5 COMA label:w2 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA color:w5 COMA label:w2 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA color:w5 COMA link:w6 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA color:w5 COMA link:w6 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA link:w6 COMA value:w1 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA link:w6 COMA value:w1 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA link:w6 COMA color:w5 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA link:w6 COMA color:w5 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA link:w6 COMA label:w2 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA description:w3 COMA link:w6 COMA label:w2 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA description:w3 COMA label:w2 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA description:w3 COMA label:w2 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA description:w3 COMA color:w5 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA description:w3 COMA color:w5 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA description:w3 COMA link:w6 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA description:w3 COMA link:w6 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA label:w2 COMA description:w3 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA label:w2 COMA description:w3 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA label:w2 COMA color:w5 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA label:w2 COMA color:w5 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA label:w2 COMA link:w6 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA label:w2 COMA link:w6 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA color:w5 COMA label:w2 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA color:w5 COMA label:w2 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA color:w5 COMA description:w3 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA color:w5 COMA description:w3 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA color:w5 COMA link:w6 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA color:w5 COMA link:w6 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA link:w6 COMA label:w2 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA link:w6 COMA label:w2 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA link:w6 COMA color:w5 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA link:w6 COMA color:w5 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA link:w6 COMA description:w3 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA value:w1 COMA link:w6 COMA description:w3 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA description:w3 COMA value:w1 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA description:w3 COMA value:w1 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA description:w3 COMA label:w2 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA description:w3 COMA label:w2 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA description:w3 COMA link:w6 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA description:w3 COMA link:w6 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA value:w1 COMA description:w3 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA value:w1 COMA description:w3 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA value:w1 COMA label:w2 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA value:w1 COMA label:w2 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA value:w1 COMA link:w6 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA value:w1 COMA link:w6 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA label:w2 COMA value:w1 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA label:w2 COMA value:w1 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA label:w2 COMA description:w3 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA label:w2 COMA description:w3 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA label:w2 COMA link:w6 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA label:w2 COMA link:w6 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA link:w6 COMA value:w1 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA link:w6 COMA value:w1 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA link:w6 COMA label:w2 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA link:w6 COMA label:w2 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA link:w6 COMA description:w3 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA color:w5 COMA link:w6 COMA description:w3 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA description:w3 COMA value:w1 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA description:w3 COMA value:w1 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA description:w3 COMA color:w5 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA description:w3 COMA color:w5 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA description:w3 COMA label:w2 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA description:w3 COMA label:w2 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA value:w1 COMA description:w3 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA value:w1 COMA description:w3 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA value:w1 COMA color:w5 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA value:w1 COMA color:w5 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA value:w1 COMA label:w2 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA value:w1 COMA label:w2 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA color:w5 COMA value:w1 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA color:w5 COMA value:w1 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA color:w5 COMA description:w3 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA color:w5 COMA description:w3 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA color:w5 COMA label:w2 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA color:w5 COMA label:w2 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA label:w2 COMA value:w1 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA label:w2 COMA value:w1 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA label:w2 COMA color:w5 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA label:w2 COMA color:w5 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA label:w2 COMA description:w3 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | icon:w4 COMA link:w6 COMA label:w2 COMA description:w3 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA description:w3 COMA icon:w4 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA description:w3 COMA icon:w4 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA description:w3 COMA value:w1 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA description:w3 COMA value:w1 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA description:w3 COMA link:w6 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA description:w3 COMA link:w6 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA icon:w4 COMA description:w3 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA icon:w4 COMA description:w3 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA icon:w4 COMA value:w1 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA icon:w4 COMA value:w1 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA icon:w4 COMA link:w6 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA icon:w4 COMA link:w6 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA value:w1 COMA icon:w4 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA value:w1 COMA icon:w4 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA value:w1 COMA description:w3 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA value:w1 COMA description:w3 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA value:w1 COMA link:w6 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA value:w1 COMA link:w6 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA link:w6 COMA icon:w4 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA link:w6 COMA icon:w4 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA link:w6 COMA value:w1 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA link:w6 COMA value:w1 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA link:w6 COMA description:w3 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA label:w2 COMA link:w6 COMA description:w3 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA label:w2 COMA icon:w4 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA label:w2 COMA icon:w4 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA label:w2 COMA value:w1 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA label:w2 COMA value:w1 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA label:w2 COMA link:w6 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA label:w2 COMA link:w6 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA icon:w4 COMA label:w2 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA icon:w4 COMA label:w2 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA icon:w4 COMA value:w1 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA icon:w4 COMA value:w1 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA icon:w4 COMA link:w6 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA icon:w4 COMA link:w6 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA value:w1 COMA icon:w4 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA value:w1 COMA icon:w4 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA value:w1 COMA label:w2 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA value:w1 COMA label:w2 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA value:w1 COMA link:w6 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA value:w1 COMA link:w6 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA link:w6 COMA icon:w4 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA link:w6 COMA icon:w4 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA link:w6 COMA value:w1 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA link:w6 COMA value:w1 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA link:w6 COMA label:w2 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA description:w3 COMA link:w6 COMA label:w2 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA description:w3 COMA label:w2 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA description:w3 COMA label:w2 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA description:w3 COMA value:w1 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA description:w3 COMA value:w1 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA description:w3 COMA link:w6 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA description:w3 COMA link:w6 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA label:w2 COMA description:w3 COMA value:w1 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA label:w2 COMA description:w3 COMA link:w6 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA label:w2 COMA value:w1 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA label:w2 COMA value:w1 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA label:w2 COMA link:w6 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA label:w2 COMA link:w6 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA value:w1 COMA label:w2 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA value:w1 COMA label:w2 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA value:w1 COMA description:w3 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA value:w1 COMA description:w3 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA value:w1 COMA link:w6 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA value:w1 COMA link:w6 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA link:w6 COMA label:w2 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA link:w6 COMA label:w2 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA link:w6 COMA value:w1 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA link:w6 COMA value:w1 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA link:w6 COMA description:w3 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA icon:w4 COMA link:w6 COMA description:w3 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA description:w3 COMA icon:w4 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA description:w3 COMA icon:w4 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA description:w3 COMA label:w2 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA description:w3 COMA label:w2 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA description:w3 COMA link:w6 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA description:w3 COMA link:w6 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA icon:w4 COMA description:w3 COMA label:w2 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA icon:w4 COMA description:w3 COMA link:w6 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA icon:w4 COMA label:w2 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA icon:w4 COMA label:w2 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA icon:w4 COMA link:w6 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA icon:w4 COMA link:w6 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA label:w2 COMA icon:w4 COMA description:w3 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA label:w2 COMA icon:w4 COMA link:w6 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA label:w2 COMA description:w3 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA label:w2 COMA link:w6 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA label:w2 COMA link:w6 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA link:w6 COMA icon:w4 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA link:w6 COMA icon:w4 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA link:w6 COMA label:w2 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA link:w6 COMA label:w2 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA link:w6 COMA description:w3 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA value:w1 COMA link:w6 COMA description:w3 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA description:w3 COMA icon:w4 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA description:w3 COMA icon:w4 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA description:w3 COMA value:w1 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA description:w3 COMA value:w1 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA description:w3 COMA label:w2 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA description:w3 COMA label:w2 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA icon:w4 COMA description:w3 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA icon:w4 COMA description:w3 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA icon:w4 COMA value:w1 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA icon:w4 COMA value:w1 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA icon:w4 COMA label:w2 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA icon:w4 COMA label:w2 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA value:w1 COMA icon:w4 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA value:w1 COMA icon:w4 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA value:w1 COMA description:w3 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA value:w1 COMA description:w3 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA value:w1 COMA label:w2 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA label:w2 COMA icon:w4 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA label:w2 COMA icon:w4 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA label:w2 COMA value:w1 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA label:w2 COMA value:w1 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA label:w2 COMA description:w3 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | color:w5 COMA link:w6 COMA label:w2 COMA description:w3 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA description:w3 COMA icon:w4 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA description:w3 COMA icon:w4 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA description:w3 COMA color:w5 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA description:w3 COMA color:w5 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA description:w3 COMA value:w1 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA description:w3 COMA value:w1 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA icon:w4 COMA description:w3 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA icon:w4 COMA description:w3 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA icon:w4 COMA color:w5 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA icon:w4 COMA color:w5 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA icon:w4 COMA value:w1 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA icon:w4 COMA value:w1 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA color:w5 COMA icon:w4 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA color:w5 COMA icon:w4 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA color:w5 COMA description:w3 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA color:w5 COMA description:w3 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA color:w5 COMA value:w1 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA color:w5 COMA value:w1 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA value:w1 COMA icon:w4 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA value:w1 COMA icon:w4 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA value:w1 COMA color:w5 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA value:w1 COMA color:w5 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA value:w1 COMA description:w3 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA label:w2 COMA value:w1 COMA description:w3 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA label:w2 COMA icon:w4 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA label:w2 COMA icon:w4 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA label:w2 COMA color:w5 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA label:w2 COMA color:w5 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA label:w2 COMA value:w1 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA label:w2 COMA value:w1 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA icon:w4 COMA label:w2 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA icon:w4 COMA label:w2 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA icon:w4 COMA color:w5 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA icon:w4 COMA color:w5 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA icon:w4 COMA value:w1 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA icon:w4 COMA value:w1 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA color:w5 COMA icon:w4 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA color:w5 COMA icon:w4 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA color:w5 COMA label:w2 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA color:w5 COMA label:w2 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA color:w5 COMA value:w1 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA color:w5 COMA value:w1 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA value:w1 COMA icon:w4 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA value:w1 COMA icon:w4 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA value:w1 COMA color:w5 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA value:w1 COMA color:w5 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA value:w1 COMA label:w2 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA description:w3 COMA value:w1 COMA label:w2 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA description:w3 COMA label:w2 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA description:w3 COMA label:w2 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA description:w3 COMA color:w5 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA description:w3 COMA color:w5 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA description:w3 COMA value:w1 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA description:w3 COMA value:w1 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA label:w2 COMA description:w3 COMA color:w5 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA label:w2 COMA description:w3 COMA value:w1 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA label:w2 COMA color:w5 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA label:w2 COMA color:w5 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA label:w2 COMA value:w1 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA label:w2 COMA value:w1 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA color:w5 COMA label:w2 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA color:w5 COMA label:w2 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA color:w5 COMA description:w3 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA color:w5 COMA description:w3 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA color:w5 COMA value:w1 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA color:w5 COMA value:w1 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA value:w1 COMA label:w2 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA value:w1 COMA label:w2 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA value:w1 COMA color:w5 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA value:w1 COMA color:w5 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA value:w1 COMA description:w3 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA icon:w4 COMA value:w1 COMA description:w3 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA description:w3 COMA icon:w4 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA description:w3 COMA icon:w4 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA description:w3 COMA label:w2 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA description:w3 COMA label:w2 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA description:w3 COMA value:w1 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA description:w3 COMA value:w1 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA icon:w4 COMA description:w3 COMA label:w2 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA icon:w4 COMA description:w3 COMA value:w1 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA icon:w4 COMA label:w2 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA icon:w4 COMA label:w2 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA icon:w4 COMA value:w1 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA icon:w4 COMA value:w1 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA label:w2 COMA icon:w4 COMA description:w3 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA label:w2 COMA icon:w4 COMA value:w1 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA label:w2 COMA description:w3 COMA icon:w4 COMA value:w1 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA label:w2 COMA description:w3 COMA value:w1 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA label:w2 COMA value:w1 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA label:w2 COMA value:w1 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA value:w1 COMA icon:w4 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA value:w1 COMA icon:w4 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA value:w1 COMA label:w2 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA value:w1 COMA description:w3 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA color:w5 COMA value:w1 COMA description:w3 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA description:w3 COMA icon:w4 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA description:w3 COMA icon:w4 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA description:w3 COMA color:w5 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA description:w3 COMA color:w5 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA description:w3 COMA label:w2 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA description:w3 COMA label:w2 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA icon:w4 COMA description:w3 COMA color:w5 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA icon:w4 COMA description:w3 COMA label:w2 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA icon:w4 COMA color:w5 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA icon:w4 COMA color:w5 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA icon:w4 COMA label:w2 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA icon:w4 COMA label:w2 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA color:w5 COMA icon:w4 COMA description:w3 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA color:w5 COMA icon:w4 COMA label:w2 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA color:w5 COMA description:w3 COMA icon:w4 COMA label:w2 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA color:w5 COMA description:w3 COMA label:w2 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA color:w5 COMA label:w2 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA color:w5 COMA label:w2 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA label:w2 COMA icon:w4 COMA color:w5 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA label:w2 COMA icon:w4 COMA description:w3 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA label:w2 COMA color:w5 COMA icon:w4 COMA description:w3 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA label:w2 COMA color:w5 COMA description:w3 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA label:w2 COMA description:w3 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    | link:w6 COMA value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+*/
+;
 
 // CASI TERMINALES
 
@@ -453,43 +1229,44 @@ pastelXtChart ::= KD_CHART IZQLLAVE title:w1 COMA legend:w2 DERLLAVE {: RESULT= 
 
 // usado en properties
 // KD_KEYWORDS = "keywords":
-keywords ::= KD_KEYWORDS IZQCORCH keywordList DERCORCH
+keywords ::= KD_KEYWORDS IZQCORCH keywordList:w1 DERCORCH {: RESULT=w1; :}
 ;
 // keywordList = "página web", "ejemplo", "JSON"
 keywordList ::=
-    /* epsilon */
-    | MI_TEXTO
-    | keywordList2 MI_TEXTO
+    /* epsilon */ {: ArrayList<String> list = new ArrayList<>(); RESULT=list; :}
+    | MI_TEXTO:w1 {: ArrayList<String> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | keywordList2:w1 MI_TEXTO:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 keywordList2 ::=
-    MI_TEXTO COMA
-    | keywordList2 MI_TEXTO COMA
+    MI_TEXTO:w1 COMA {: ArrayList<String> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | keywordList2:w1 MI_TEXTO:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
 
 // usado en lineas
 // KD_PONTS = "points":
-points ::= KD_PONTS IZQCORCH pointList DERCORCH
+points ::= KD_PONTS IZQCORCH pointList:w1 DERCORCH {: RESULT=w1; :}
 ;
 pointList ::= 
-    pointValue 
-    | pointList2 pointValue
-;
-pointValue ::= IZQLLAVE xValue COMA yValue DERLLAVE
+    pointValue:w1 {: ArrayList<Lineas.Data.Punto> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pointList2:w1 pointValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 pointList2 ::=
-    pointValue COMA
-    | pointList2 pointValue COMA
+    pointValue:w1 COMA {: ArrayList<Lineas.Data.Punto> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pointList2:w1 pointValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
+pointValue ::= IZQLLAVE xValue:w1 COMA yValue:w2 DERLLAVE {: RESULT= new Lineas.Data.Punto(w1,w2); :}
+;
+
 // usado en lineasXt
-pointsXt ::= KD_PONTS IZQCORCH pointXtList DERCORCH
+pointsXt ::= KD_PONTS IZQCORCH pointXtList:w1 DERCORCH {: RESULT=w1; :}
 ;
 pointXtList ::= 
-    pointXtValue 
-    | pointXtList2 pointXtValue
+    pointXtValue:w1 {: ArrayList<LineasXt.Data.Punto> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pointXtList2:w1 pointXtValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
 pointXtList2 ::=
-    pointXtValue COMA
-    | pointXtList2 pointXtValue COMA
+    pointXtValue:w1 COMA {: ArrayList<LineasXt.Data.Punto> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
+    | pointXtList2:w1 pointXtValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
-pointXtValue ::= IZQLLAVE xValue COMA yValue COMA label DERLLAVE
+pointXtValue ::= IZQLLAVE xValue:w1 COMA yValue:w2 COMA label:w3 DERLLAVE {: RESULT= new LineasXt.Data.Punto(w1,w2,w3); :}
 ;

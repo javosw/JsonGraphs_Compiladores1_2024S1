@@ -29,4 +29,11 @@ public class Lenguajes {
             System.out.println(ex.getMessage());
         }
     } 
+
+
+    static void combinador()
+    {
+        String[] frases = {"",""};
+        
+    }
 }
