@@ -5,6 +5,7 @@
 package josq.lenguajes.automatas;
 
 import java_cup.runtime.Symbol;
+import josq.lenguajes.modelos.Dashb;
 import java_cup.runtime.DefaultSymbolFactory;
 import java_cup.runtime.Scanner;
 
@@ -18,9 +19,9 @@ import java.util.ArrayList;
  *
  * @author JavierOswaldo
  */
-public class Automata
+public class Automatas
 {
-    private static Object getDashb(Reader myReader) throws Exception
+    private static Dashb getDashb(Reader myReader) throws Exception
     {
         // procesadores de lenguaje
         DefaultSymbolFactory myFactory = new DefaultSymbolFactory();
@@ -31,16 +32,16 @@ public class Automata
         Symbol mySymbol = parser.parse();
 
         //return (MyType) (mySymbol.value);
-        return mySymbol.value;
+        return (Dashb) mySymbol.value;
     }
-    public static Object getDashbDesdeArchivo(String ruta) throws Exception
+    public static Dashb getDashbDesdeArchivo(String ruta) throws Exception
     {
         FileInputStream myStream = new FileInputStream(ruta);
         Reader myReader = new InputStreamReader(myStream);
 
         return getDashb(myReader);
     }
-    public static Object getDashbDesdeString(String texto) throws Exception
+    public static Dashb getDashbDesdeString(String texto) throws Exception
     {
         Reader myReader = new StringReader(texto);
 

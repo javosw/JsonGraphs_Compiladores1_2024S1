@@ -4,7 +4,11 @@
 
 package josq.lenguajes;
 
-import josq.lenguajes.automatas.Automata;
+import java.util.ArrayList;
+
+import josq.lenguajes.automatas.Automatas;
+import josq.lenguajes.modelos.Dashb;
+import josq.lenguajes.modelos.Par;
 
 /**
  *
@@ -18,11 +22,11 @@ public class Lenguajes {
     
     static void leerDashb()
     {
-        String ruta = "C:\\DASHB\\todas-e";
+        String ruta = "C:\\DASHB\\todas";
         
         try
         {
-            Automata.getDashbDesdeArchivo(ruta);
+            Dashb miDash = Automatas.getDashbDesdeArchivo(ruta);
         }
         catch (Exception ex)
         {

@@ -68,9 +68,10 @@ terminal KD_NAME ;
 
 // #%#%#%#% NO TERMINALES #%#%#%#%
 
-non terminal ArrayList<Par> dashboard, content, content2, content3 ;
+non terminal Dashb dashboard ;
 
-non terminal String title, description, header, footer, backgr, fontFam, fontSize ;
+non terminal ArrayList<Par> content, content2, content3 ;
+
 non terminal Par property ;
 non terminal ArrayList<Par> properties, propertyList ;
 
@@ -116,6 +117,15 @@ non terminal ArrayList<LineasXt.Data> lineasXtData, lineasXtDataList, lineasXtDa
 non terminal Tarjeta tarjeta, tarjetaData ;
 non terminal TarjetaXt tarjetaXt, tarjetaXtData ;
 
+non terminal ArrayList<String> keywords, keywordList, keywordList2 ;
+
+non terminal Lineas.Data.Punto pointValue ;
+non terminal ArrayList<Lineas.Data.Punto> points, pointList, pointList2 ;
+
+non terminal LineasXt.Data.Punto pointXtValue ;
+non terminal ArrayList<LineasXt.Data.Punto> pointsXt, pointXtList, pointXtList2 ;
+
+non terminal String title, description, header, footer, backgr, fontFam, fontSize ;
 non terminal String category, value ;
 non terminal String xLabel, yLabel ;
 non terminal String color ;
@@ -130,22 +140,13 @@ non terminal String link ;
 non terminal String copyright ;
 non terminal String lineStyle ; 
 
-non terminal ArrayList<String> keywords, keywordList, keywordList2 ;
-
-non terminal Lineas.Data.Punto pointValue ;
-non terminal ArrayList<Lineas.Data.Punto> points, pointList, pointList2 ;
-
-non terminal LineasXt.Data.Punto pointXtValue ;
-non terminal ArrayList<LineasXt.Data.Punto> pointsXt, pointXtList, pointXtList2 ;
-
-
 // PRODUCCIONES
 
 // definicion de la produccion inicial
 start with dashboard ;
 
 dashboard ::=
-    IZQLLAVE content:w1 DERLLAVE {: RESULT=w1; :}
+    IZQLLAVE content:w1 DERLLAVE {: RESULT= Dashb.newDashb(w1); :}
 ;
 content ::= 
     properties:w1 content2:w2 {: w2.add(new Par(Index.SD_PROPERTY,w1)); RESULT=w2; :}
