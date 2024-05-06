@@ -196,7 +196,7 @@ grafico ::=
     | lineasXt:w1  {: RESULT=w1; :}
     | tarjeta:w1   {: RESULT=w1; :}
     | tarjetaXt:w1 {: RESULT=w1; :}
-    | error DERLLAVE {: RESULT=null; :}
+    | error:w1 DERLLAVE:w2 {: print("@grafico "+w1left+"-"+w2right+"\n"); RESULT=null; :}
 ;
 
 // BARRAS >>>>>>>>>>>>>>>>>>>
@@ -220,7 +220,9 @@ barrasDataValue ::=
 ;
 
 // barrasXt
-barrasXt ::= IZQLLAVE barrasXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new BarrasXt(w1,w2); :}
+barrasXt ::= 
+    IZQLLAVE barrasXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new BarrasXt(w1,w2); :}
+    | IZQLLAVE chart:w2 COMA barrasXtData:w1 DERLLAVE {: RESULT= new BarrasXt(w1,w2); :}
 ;
 barrasXtData ::= KD_DATA IZQCORCH barrasXtDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
@@ -251,16 +253,19 @@ pastelDataList ::=
     pastelDataValue:w1 {: ArrayList<Pastel.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
     | pastelDataList2:w1 pastelDataValue:w2 {: w1.add(w2); RESULT=w1; :}
 ;
-pastelDataValue ::= 
-    IZQLLAVE label:w1 COMA value:w2 DERLLAVE {: RESULT= new Pastel.Data(w1,w2); :}
-    | IZQLLAVE value:w2 COMA label:w1 DERLLAVE {: RESULT= new Pastel.Data(w1,w2); :}
-;
 pastelDataList2 ::=
     pastelDataValue:w1 COMA {: ArrayList<Pastel.Data> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
     | pastelDataList2:w1 pastelDataValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
 ;
+pastelDataValue ::= 
+    IZQLLAVE label:w1 COMA value:w2 DERLLAVE {: RESULT= new Pastel.Data(w1,w2); :}
+    | IZQLLAVE value:w2 COMA label:w1 DERLLAVE {: RESULT= new Pastel.Data(w1,w2); :}
+;
+
 // pastelXt
-pastelXt ::= IZQLLAVE pastelXtData:w1 COMA pastelXtChart:w2 DERLLAVE {: RESULT= new PastelXt(w1,w2); :}
+pastelXt ::= 
+    IZQLLAVE pastelXtData:w1 COMA pastelXtChart:w2 DERLLAVE {: RESULT= new PastelXt(w1,w2); :}
+    | IZQLLAVE pastelXtChart:w2 COMA pastelXtData:w1 DERLLAVE {: RESULT= new PastelXt(w1,w2); :}
 ;
 pastelXtData ::= KD_DATA IZQCORCH pastelXtDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
@@ -299,8 +304,11 @@ puntosDataValue ::=
     IZQLLAVE xValue:w1 COMA yValue:w2 DERLLAVE {: RESULT= new Puntos.Data(w1,w2); :}
     | IZQLLAVE yValue:w2 COMA xValue:w1 DERLLAVE {: RESULT= new Puntos.Data(w1,w2); :}
 ;
+
 // puntosXt
-puntosXt ::= IZQLLAVE puntosXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new PuntosXt(w1,w2); :}
+puntosXt ::= 
+    IZQLLAVE puntosXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new PuntosXt(w1,w2); :}
+    | IZQLLAVE chart:w2 COMA puntosXtData:w1 DERLLAVE {: RESULT= new PuntosXt(w1,w2); :}
 ;
 puntosXtData ::= KD_DATA IZQCORCH puntosXtDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
@@ -341,7 +349,9 @@ puntosXtDataValue ::=
 
 // LINEAS >>>>>>>>>>>>>>>>>>>
 // lineas
-lineas ::= IZQLLAVE lineasData:w1 COMA chart:w2 DERLLAVE {: RESULT= new Lineas(w1,w2); :}
+lineas ::= 
+    IZQLLAVE lineasData:w1 COMA chart:w2 DERLLAVE {: RESULT= new Lineas(w1,w2); :}
+    | IZQLLAVE chart:w2 COMA lineasData:w1 DERLLAVE {: RESULT= new Lineas(w1,w2); :}
 ;
 lineasData ::= KD_DATA IZQCORCH lineasDataList:w1 DERCORCH {: RESULT=w1; :}
 ;
@@ -359,7 +369,9 @@ lineasDataValue ::=
 ;
 
 // lineasXt
-lineasXt ::= IZQLLAVE lineasXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new LineasXt(w1,w2); :}
+lineasXt ::= 
+    IZQLLAVE lineasXtData:w1 COMA chart:w2 DERLLAVE {: RESULT= new LineasXt(w1,w2); :}
+    | IZQLLAVE chart:w2 COMA lineasXtData:w1 DERLLAVE {: RESULT= new LineasXt(w1,w2); :}
 ;
 lineasXtData ::= KD_DATA IZQCORCH lineasXtDataList:w1 DERCORCH {: RESULT=w1; :}
 ;

@@ -30,7 +30,8 @@ public class Permutations<T> {
     }
 
     public static void main(String args[]) {
-        String[] cadenas = {"value:w1", "label:w2", "description:w3", "icon:w4", "color:w5", "link:w6"};
+        String[] cadenas = {"category:w1", "value:w2", "color:w3"};
+        // 
         Permutations<String> myPerm = new Permutations<>();
         myPerm.getAll(cadenas);
     }

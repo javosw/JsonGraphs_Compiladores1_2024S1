@@ -18,7 +18,7 @@ public class Lenguajes {
     
     static void leerDashb()
     {
-        String ruta = "C:\\DASHB\\barras";
+        String ruta = "C:\\DASHB\\todas-e";
         
         try
         {
@@ -29,11 +29,4 @@ public class Lenguajes {
             System.out.println(ex.getMessage());
         }
     } 
-
-
-    static void combinador()
-    {
-        String[] frases = {"",""};
-        
-    }
 }

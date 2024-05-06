@@ -15,10 +15,6 @@ public class Dashb {
     private ArrayList<Object> graficos;
 
 
-
-
-
-
 /*
     barras
     barrasXt
@@ -31,7 +27,7 @@ public class Dashb {
     tarjeta
     tarjetaXt
 */
-    public static Dashb newDashb()
+    public static Dashb newDashb(ArrayList<Par> data)
     {
         
 
