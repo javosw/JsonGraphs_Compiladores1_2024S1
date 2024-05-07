@@ -7,6 +7,12 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 import josq.dashb.databinding.ActivityMainBinding;
 import josq.lenguajes.automatas.Automata;
 
@@ -43,16 +49,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     boolean onMenuItemClick(MenuItem item) {
+        InputStream myStream = null;
+
         int id = item.getItemId();
         if(id == R.id.todas) {
-            System.out.println("TODAS"); return true; }
+            myStream = this.getResources().openRawResource(R.raw.todas);
+        }
         else if(id == R.id.barras) {
-            System.out.println("BARRAS"); return true; }
+            myStream = this.getResources().openRawResource(R.raw.barras);
+        }
         else if(id == R.id.pastel) {
-            System.out.println("PASTEL"); return true; }
-        else if(id == R.id.puntos) { return true; }
-        else if(id == R.id.lineas) { return true; }
-        else if(id == R.id.tarjeta) { return true; }
+            myStream = this.getResources().openRawResource(R.raw.pastel);
+        }
+        else if(id == R.id.puntos) {
+            myStream = this.getResources().openRawResource(R.raw.puntos);
+        }
+        else if(id == R.id.lineas) {
+            myStream = this.getResources().openRawResource(R.raw.lineas);
+        }
+        else if(id == R.id.tarjeta) {
+            myStream = this.getResources().openRawResource(R.raw.tarjeta);
+        }
+
+        try {
+            assert myStream != null;
+            String myString = IOUtils.toString(myStream, StandardCharsets.UTF_8);
+            binding.editor.setText(myString);
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println("@onMenuItemClick: "+e.getMessage());
+        }
+
         return false;
     }
 

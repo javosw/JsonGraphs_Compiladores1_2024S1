@@ -1,0 +1,38 @@
+
+{
+	"title": "Mi Página Web",
+	"description": "Una página web de ejemplo",
+	"keywords": ["página web", "ejemplo", "JSON"], 
+	"header": { "title": "Bienvenido a mi sitio web" },
+	"footer": { "copyright": "© 2024" },
+	"backgroundColor": "#f0f0f0", 
+	"fontFamily": "Arial, sans-serif", 
+	"fontSize": "16px"
+
+	{
+		"data": [
+			{ "label": "A", "value": 30 },
+			{ "label": "B", "value": 50 },
+			{ "label": "C", "value": 20 }
+		]
+	}
+
+	{
+		"data": [
+			{ "label": "A", "value": 30, "color": "#ff5733" },
+			{ "label": "B", "value": 50, "color": "#33ff57" },
+			{ "label": "C", "value": 20, "color": "#5733ff" }
+		],
+		"chart": {
+			"title": "Gráfica de Pastel",
+			"legendPosition": "bottom"
+		}
+	}
+}
+
+
+
+
+
+
+

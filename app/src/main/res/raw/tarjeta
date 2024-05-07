@@ -1,0 +1,30 @@
+
+{
+	"title": "Mi Página Web",
+	"description": "Una página web de ejemplo",
+	"keywords": ["página web", "ejemplo", "JSON"], 
+	"header": { "title": "Bienvenido a mi sitio web" },
+	"footer": { "copyright": "© 2024" },
+	"backgroundColor": "#f0f0f0", 
+	"fontFamily": "Arial, sans-serif", 
+	"fontSize": "16px"
+
+	{
+		"data": {
+			"value": 75,
+			"label": "Porcentaje completado",
+			"description": "Este es el porcentaje de completado de la tarea actual."
+		}
+	}
+
+	{
+		"data": {
+			"value": 42,
+			"label": "Puntos obtenidos",
+			"description": "Estos son los puntos obtenidos en la última evaluación.",
+			"icon": "fa-star",
+			"color": "#FFD700",
+			"link": "https://example.com/more-info"
+		}
+	}
+}

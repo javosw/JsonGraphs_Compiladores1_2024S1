@@ -1,0 +1,82 @@
+
+{
+	"title": "Mi Página Web",
+	"description": "Una página web de ejemplo",
+	"keywords": ["página web", "ejemplo", "JSON"], 
+	"header": { "title": "Bienvenido a mi sitio web" },
+	"footer": { "copyright": "© 2024" },
+	"backgroundColor": "#f0f0f0", 
+	"fontFamily": "Arial, sans-serif", 
+	"fontSize": "16px"
+
+	{
+		"data": [
+			{
+				"name": "Serie 1",
+				"points": [
+					{ "x": 1, "y": 10 },
+					{ "x": 2, "y": 20 },
+					{ "x": 3, "y": 15 },
+					{ "x": 4, "y": 25 },
+					{ "x": 5, "y": 30 }
+				]
+			},
+			{
+				"name": "Serie 2",
+				"points": [
+					{ "x": 1, "y": 15 },
+					{ "x": 2, "y": 25 },
+					{ "x": 3, "y": 20 },
+					{ "x": 4, "y": 30 },
+					{ "x": 5, "y": 35 }
+				]
+			}
+		],
+		"chart": {
+			"title": "Gráfico de Líneas",
+			"xAxisLabel": "Eje X",
+			"yAxisLabel": "Eje Y"
+		}
+	}
+
+	{
+		"data": [
+			{
+				"name": "Serie 1",
+				"points": [
+				{ "x": 1, "y": 10, "label": "Punto 1" },
+				{ "x": 2, "y": 20, "label": "Punto 2" },
+				{ "x": 3, "y": 15, "label": "Punto 3" },
+				{ "x": 4, "y": 25, "label": "Punto 4" },
+				{ "x": 5, "y": 30, "label": "Punto 5" }
+				],
+				"color": "#ff5733",
+				"lineStyle": "solid"
+			},
+			{
+				"name": "Serie 2",
+				"points": [
+				{ "x": 1, "y": 15, "label": "Punto 1" },
+				{ "x": 2, "y": 25, "label": "Punto 2" },
+				{ "x": 3, "y": 20, "label": "Punto 3" },
+				{ "x": 4, "y": 30, "label": "Punto 4" },
+				{ "x": 5, "y": 35, "label": "Punto 5" }
+				],
+				"color": "#33ff57",
+				"lineStyle": "dashed"
+			}
+		],
+		"chart": {
+			"title": "Gráfico de Líneas",
+			"xAxisLabel": "Eje X",
+			"yAxisLabel": "Eje Y"
+		}
+	}
+}
+
+
+
+
+
+
+

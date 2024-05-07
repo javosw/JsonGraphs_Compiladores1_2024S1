@@ -1,0 +1,43 @@
+
+{
+	"title": "Mi Página Web",
+	"description": "Una página web de ejemplo",
+	"keywords": ["página web", "ejemplo", "JSON"], 
+	"header": { "title": "Bienvenido a mi sitio web" },
+	"footer": { "copyright": "© 2024" },
+	"backgroundColor": "#f0f0f0", 
+	"fontFamily": "Arial, sans-serif", 
+	"fontSize": "16px"
+
+	{
+		"data": [
+			{ "category": "A", "value": 30 },
+			{ "category": "B", "value": 50 },
+			{ "category": "C", "value": 20 },
+			{ "category": "D", "value": 45 },
+			{ "category": "E", "value": 60 }
+		]
+	}
+
+	{
+		"data": [
+		{ "category": "A", "value": 30, "color": "#ff5733" },
+		{ "category": "B", "value": 50, "color": "#33ff57" },
+		{ "category": "C", "value": 20, "color": "#5733ff" },
+		{ "category": "D", "value": 45, "color": "#ffff33" },
+		{ "category": "E", "value": 60, "color": "#33ffff" }
+		],
+		"chart": {
+			"title": "Gráfica de Barras",
+			"xAxisLabel": "Categorías",
+			"yAxisLabel": "Valores"
+		}
+	}
+}
+
+
+
+
+
+
+
