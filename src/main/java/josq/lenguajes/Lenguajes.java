@@ -6,7 +6,7 @@ package josq.lenguajes;
 
 import java.util.ArrayList;
 
-import josq.lenguajes.automatas.Automatas;
+import josq.lenguajes.automatas.Ejecucion;
 import josq.lenguajes.modelos.Dashb;
 import josq.lenguajes.modelos.Par;
 
@@ -26,7 +26,7 @@ public class Lenguajes {
         
         try
         {
-            Dashb miDash = Automatas.getDashbDesdeArchivo(ruta);
+            Dashb miDash = Ejecucion.getDashbDesdeArchivo(ruta);
         }
         catch (Exception ex)
         {

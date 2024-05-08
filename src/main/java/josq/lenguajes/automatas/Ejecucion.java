@@ -19,7 +19,7 @@ import java.util.ArrayList;
  *
  * @author JavierOswaldo
  */
-public class Automatas
+public class Ejecucion
 {
     private static Dashb getDashb(Reader myReader) throws Exception
     {
