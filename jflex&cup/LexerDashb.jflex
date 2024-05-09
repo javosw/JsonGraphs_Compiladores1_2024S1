@@ -126,8 +126,8 @@ __   =  {_v}|{_h}
 // áÁéÉíÍóÓúÚñÑ
 // \341\301\351\311\355\315\363\323\372\332\361\321
 // \u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1\u00A9
-//miChar = [0-9a-zA-Z\,\.\-\_áÁéÉíÍóÓúÚñÑ©]
-miChar = [0-9a-zA-Z\,\.\-\_\u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1\u00A9]
+miChar = [0-9a-zA-Z\,\.\-\_áÁéÉíÍóÓúÚñÑ©]
+//miChar = [0-9a-zA-Z\,\.\-\_\u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1\u00A9]
 miTexto = \"({__}|{miChar})+\"
 //miTextoXt
 //miURL
@@ -136,32 +136,32 @@ miColor =  \"{__}*#[0-9a-fA-F]{6}{__}*\"
 miInteger = [0-9]+
 miURL = \"{__}*(("http"|"https")\:\/\/)[0-9a-zA-Z\:\.\/\?\=\-\_]+{__}*\"
 
-points = \"{__}*"points"{__}*\"{__}*\: 
-lineStyle = \"{__}*"lineStyle"{__}*\"{__}*\: 
-data = \"{__}*"data"{__}*\"{__}*\: 
-label = \"{__}*"label"{__}*\"{__}*\: 
-icon = \"{__}*"icon"{__}*\"{__}*\: 
-link = \"{__}*"link"{__}*\"{__}*\: 
-title = \"{__}*"title"{__}*\"{__}*\: 
-description = \"{__}*"description"{__}*\"{__}*\: 
-copyright = \"{__}*"copyright"{__}*\"{__}*\: 
-backgroundColor = \"{__}*"backgroundColor"{__}*\"{__}*\: 
-fontFamily = \"{__}*"fontFamily"{__}*\"{__}*\: 
-fontSize = \"{__}*"fontSize"{__}*\"{__}*\: 
-category = \"{__}*"category"{__}*\"{__}*\: 
-value = \"{__}*"value"{__}*\"{__}*\: 
-color = \"{__}*"color"{__}*\"{__}*\: 
-xAxisLabel = \"{__}*"xAxisLabel"{__}*\"{__}*\: 
-yAxisLabel = \"{__}*"yAxisLabel"{__}*\"{__}*\: 
-legendPosition = \"{__}*"legendPosition"{__}*\"{__}*\: 
 x = \"{__}*"x"{__}*\"{__}*\: 
 y = \"{__}*"y"{__}*\"{__}*\: 
+name = \"{__}*"name"{__}*\"{__}*\:
 size = \"{__}*"size"{__}*\"{__}*\: 
+icon = \"{__}*"icon"{__}*\"{__}*\: 
+link = \"{__}*"link"{__}*\"{__}*\: 
+data = \"{__}*"data"{__}*\"{__}*\: 
+chart = \"{__}*"chart"{__}*\"{__}*\: 
+label = \"{__}*"label"{__}*\"{__}*\:
+title = \"{__}*"title"{__}*\"{__}*\: 
+value = \"{__}*"value"{__}*\"{__}*\: 
+color = \"{__}*"color"{__}*\"{__}*\: 
+points = \"{__}*"points"{__}*\"{__}*\: 
 header = \"{__}*"header"{__}*\"{__}*\: 
 footer = \"{__}*"footer"{__}*\"{__}*\: 
-chart = \"{__}*"chart"{__}*\"{__}*\: 
+fontSize = \"{__}*"fontSize"{__}*\"{__}*\: 
+category = \"{__}*"category"{__}*\"{__}*\: 
 keywords = \"{__}*"keywords"{__}*\"{__}*\: 
-name = \"{__}*"name"{__}*\"{__}*\:
+lineStyle = \"{__}*"lineStyle"{__}*\"{__}*\: 
+copyright = \"{__}*"copyright"{__}*\"{__}*\: 
+fontFamily = \"{__}*"fontFamily"{__}*\"{__}*\: 
+xAxisLabel = \"{__}*"xAxisLabel"{__}*\"{__}*\: 
+yAxisLabel = \"{__}*"yAxisLabel"{__}*\"{__}*\: 
+description = \"{__}*"description"{__}*\"{__}*\: 
+legendPosition = \"{__}*"legendPosition"{__}*\"{__}*\: 
+backgroundColor = \"{__}*"backgroundColor"{__}*\"{__}*\: 
 
 %%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%

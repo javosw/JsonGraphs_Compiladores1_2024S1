@@ -3,6 +3,7 @@ package josq.lenguajes.automatas;
 
 // antes de la clase parser
 
+import java.util.List;
 import java.util.ArrayList;
 //import java_cup.runtime.*;
 import josq.lenguajes.modelos.*;
@@ -22,7 +23,16 @@ class ParserDashb;
 
 // dentro de la clase action
 action code {:
-    private void print(String texto){ System.out.print(texto); } 
+    private void print(String texto){ System.out.print(texto); }
+
+    private void expectedSym()
+    {
+        List<Integer> ids = expected_token_ids();
+        StringBuilder idsName = new StringBuilder();
+        for (int i : ids) idsName.append(symbl_name_from_id(i)+" ");
+        print("@expected: "+idsName.toString()+"\n");
+        print("_<\n");
+    }
 :}
 
 // #%#%#%#% SIMBOLOS #%#%#%#%
@@ -149,8 +159,11 @@ dashboard ::=
     IZQLLAVE content:w1 DERLLAVE {: RESULT= Dashb.newDashb(w1); :}
 ;
 content ::= 
-    properties:w1 content2:w2 {: w2.add(new Par(Index.SD_PROPERTY,w1)); RESULT=w2; :}
+    properties:w1 {: ArrayList<Par> list= new ArrayList<>(); list.add(new Par(Index.SD_PROPERTY,w1)); RESULT=list; :}
+    | properties:w1 content2:w2 {: w2.add(new Par(Index.SD_PROPERTY,w1)); RESULT=w2; :}
+    | properties:w1 content2:w2 properties:w3 {: w2.add(new Par(Index.SD_PROPERTY,w1)); w2.add(new Par(Index.SD_PROPERTY,w3)); RESULT=w2; :}
     | graficos:w1 content3:w2 {: w2.add(new Par(Index.SD_GRAFICOS,w1)); RESULT=w2; :}
+    | graficos:w1 content3:w2 graficos:w3 {: w2.add(new Par(Index.SD_GRAFICOS,w1)); w2.add(new Par(Index.SD_GRAFICOS,w3)); RESULT=w2; :}
 ;
 content2 ::=
     graficos:w1 {: ArrayList<Par> list= new ArrayList<>(); list.add(new Par(Index.SD_GRAFICOS,w1)); RESULT=list; :}
@@ -163,12 +176,10 @@ content3 ::=
 
 // PROPERTIES >>>>>>>>>>>>>>>>>>>
 properties ::= 
-    property:w1 {: ArrayList<Par> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | propertyList:w1 property:w2 {: w1.add(w2); RESULT=w1; :}
-;
-propertyList ::=
-    property:w1 COMA {: ArrayList<Par> list= new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | propertyList:w1 property:w2 COMA {: w1.add(w2); RESULT=w1; :}
+    property:w1 {: ArrayList<Par> list= new ArrayList<>(); if(w1!=null) list.add(w1); RESULT=list; :}
+    | property:w1 COMA {: ArrayList<Par> list= new ArrayList<>(); if(w1!=null) list.add(w1); RESULT=list; :}
+    | properties:w1 property:w2 {: if(w2!=null) w1.add(w2); RESULT=w1; :}
+    | properties:w1 property:w2 COMA {: if(w2!=null) w1.add(w2); RESULT=w1; :}
 ;
 property ::= 
     title:w1         {: RESULT= new Par(Index.KD_TITLE,w1); :}
@@ -179,12 +190,16 @@ property ::=
     | backgr:w1      {: RESULT= new Par(Index.KD_BACKGR,w1); :}
     | fontFam:w1     {: RESULT= new Par(Index.KD_FONTFAM,w1); :}
     | fontSize:w1    {: RESULT= new Par(Index.KD_FONTSIZE,w1); :}
+    | error:w1 MI_TEXTO:w2 {: RESULT=null; print("\n@parser:property1 "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 MI_COLOR:w2 {: RESULT=null; print("\n@parser:property2 "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 DERCORCH:w2 {: RESULT=null; print("\n@parser:property3 "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 DERLLAVE:w2 {: RESULT=null; print("\n@parser:property4 "+w1left+"-"+w2right+"\n\n"); :}
 ;
 
 // GRAFICOS >>>>>>>>>>>>>>>>>>>
 graficos ::=
-    grafico:w1 {: ArrayList<Object> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | graficos:w1 grafico:w2 {: w1.add(w2); RESULT=w1; :}
+    grafico:w1 {: ArrayList<Object> list = new ArrayList<>(); if(w1!=null) list.add(w1); RESULT=list; :}
+    | graficos:w1 grafico:w2 {: if(w2!=null) w1.add(w2); RESULT=w1; :}
 ;
 grafico ::=
     barras:w1      {: RESULT=w1; :}
@@ -197,7 +212,7 @@ grafico ::=
     | lineasXt:w1  {: RESULT=w1; :}
     | tarjeta:w1   {: RESULT=w1; :}
     | tarjetaXt:w1 {: RESULT=w1; :}
-    | error:w1 DERLLAVE:w2 {: print("@grafico "+w1left+"-"+w2right+"\n"); RESULT=null; :}
+    | IZQLLAVE:w1 error:w2 DERLLAVE:w3 {: RESULT=null; print("\n@parser:grafico "+w1left+"-"+w3right+"\n\n"); :}
 ;
 
 // BARRAS >>>>>>>>>>>>>>>>>>>

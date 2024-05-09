@@ -22,7 +22,7 @@ public class Lenguajes {
     
     static void leerDashb()
     {
-        String ruta = "C:\\DASHB\\todas";
+        String ruta = "C:\\DASHB\\todas-error@prop";
         
         try
         {
@@ -30,7 +30,8 @@ public class Lenguajes {
         }
         catch (Exception ex)
         {
-            System.out.println(ex.getMessage());
+            System.out.println("@leer:" + ex.getMessage());
+            ex.printStackTrace();
         }
     } 
 }
