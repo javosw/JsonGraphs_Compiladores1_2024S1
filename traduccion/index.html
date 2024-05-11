@@ -23,22 +23,16 @@
             description 1
         </div>
 
-        <div>
-            <h3>dataset 1 (bar)</h3>
-            <canvas id="myChart1" class="grafico"></canvas>
-        </div>
-        <div>
-            <h3>dataset 2 (pie)</h3>
-            <canvas id="myChart2" class="grafico"></canvas>
-        </div>
-        <div>
-            <h3>dataset 3 (scatter)</h3>
-            <canvas id="myChart3" class="grafico"></canvas>
-        </div>
-        <div>
-            <h3>dataset 4 (bubble)</h3>
-            <canvas id="myChart4" class="grafico"></canvas>
-        </div>
+        <h3>dataset 1 (bar)</h3>
+        <canvas id="myChart1" class="grafico"></canvas>
+        <h3>dataset 1 (bar)</h3>
+        <canvas id="myChart1b" class="grafico"></canvas>
+        <h3>dataset 2 (pie)</h3>
+        <canvas id="myChart2" class="grafico"></canvas>
+        <h3>dataset 3 (scatter)</h3>
+        <canvas id="myChart3" class="grafico"></canvas>
+        <h3>dataset 4 (bubble)</h3>
+        <canvas id="myChart4" class="grafico"></canvas>
     </main>
 
     <footer class="texto"><h4>footer</h4></footer>
@@ -50,15 +44,15 @@
             {
                 type: 'bar',
                 data: {
-                    labels: ['label1','label2','label3'],
+                    labels: ['label1','label2','label3',],
                     datasets: [
                         {
                             label: 'dataset 1',
-                            data: [1000,300,600],
+                            data: [1000,300,600,],
                             backgroundColor: [
                                 '#CC397B',
                                 '#006262',
-                                '#50C878'
+                                '#50C878',
                             ],
                         }
                     ]
@@ -77,8 +71,23 @@
                                 text: 'Axis X'
                             }
                         }
-                    }
+                    },
+                    animation: { duration: 0 }
                 }
+            }
+        );
+        new Chart(document.getElementById('myChart1b'),
+            {
+                type: 'bar',
+                data: {
+                    labels: ['label1','label2','label3',],
+                    datasets: [
+                        {
+                            data: [1000,300,600,]
+                        }
+                    ]
+                },
+                options: { animation: { duration: 0 } }
             }
         );
 
@@ -99,7 +108,7 @@
                         }
                     ]
                 },
-                options: { }
+                options: { animation: { duration: 0 } }
             }
         );
 
@@ -139,6 +148,7 @@
                             }
                         }
                     },
+                    animation: { duration: 0 }
                 }
             }
         );
@@ -170,6 +180,7 @@
                             }
                         }
                     },
+                    animation: { duration: 0 }
                 }
             }
         );

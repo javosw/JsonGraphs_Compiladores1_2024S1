@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import josq.lenguajes.automatas.Ejecucion;
 import josq.lenguajes.modelos.Dashb;
 import josq.lenguajes.modelos.Par;
+import josq.lenguajes.traduccion.HTMLinador;
 
 /**
  *
@@ -22,11 +23,14 @@ public class Lenguajes {
     
     static void leerDashb()
     {
-        String ruta = "C:\\DASHB\\todas-error@prop";
+        String rutaIn = "C:\\DASHB\\barras";
         
         try
         {
-            Dashb miDash = Ejecucion.getDashbDesdeArchivo(ruta);
+            Dashb miDash = Ejecucion.getDashbDesdeArchivo(rutaIn);
+            String page = HTMLinador.getPage(miDash);
+            String rutaOut = "C:\\Users\\JavierOswaldo\\Desktop\\MIPAGINA.html";
+            HTMLinador.writeString(rutaOut, page);
         }
         catch (Exception ex)
         {
