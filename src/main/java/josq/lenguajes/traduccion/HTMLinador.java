@@ -82,6 +82,7 @@ public class HTMLinador {
             else if (graficos.get(i) instanceof Pastel) html.append(getPastel("graf"+i,(Pastel) graficos.get(i)));
             else if (graficos.get(i) instanceof PastelXt) html.append(getPastelXt("graf"+i,(PastelXt) graficos.get(i)));
             else if (graficos.get(i) instanceof LineasXt) html.append(getLineasXt("graf"+i,(LineasXt) graficos.get(i)));
+            else if (graficos.get(i) instanceof Lineas) html.append(getLineas("graf"+i,(Lineas) graficos.get(i)));
         }
         return html.toString();
     }
@@ -243,6 +244,31 @@ public class HTMLinador {
         return js.toString();
     }
 
+    private static String getLineas(String id, Lineas miGrafico){
+        ArrayList<Lineas.Data> dataList = miGrafico.getDataList();
+        Chart1 frame = miGrafico.getChart();
+
+        StringBuilder js = new StringBuilder();
+
+        js.append("new Chart(document.getElementById('"+id+"'), { type: 'scatter', data: { datasets: [");
+        
+        StringBuilder aux1 = new StringBuilder();
+        for(Lineas.Data d : dataList){
+            aux1.append("{ label: '"+d.getName()+"',");
+
+            ArrayList<Lineas.Data.Punto> puntos = d.getPuntos();
+            StringBuilder aux2 = new StringBuilder();
+            for(Lineas.Data.Punto p : puntos) aux2.append("{x:"+p.getpX()+",y:"+p.getpY()+"},");
+            aux1.append("data: ["+aux2.toString()+"],");
+            aux1.append("showLine: true },");
+        }
+        js.append(aux1.toString()+"] }, options: { scales: {");
+        js.append("y: { title: { display: true, text: '"+frame.getyLabel()+"' } },");
+        js.append("x: { title: { display: true, text: '"+frame.getxLabel()+"' } }");
+        js.append("}, animation: { duration: 0 } } } );");
+
+        return js.toString();
+    }
 
 
     public static void writeString(String file, String txt) throws Exception
