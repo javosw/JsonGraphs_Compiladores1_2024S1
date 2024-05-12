@@ -37,6 +37,8 @@
         <canvas id="myChart3b" class="grafico"></canvas>
         <h3>dataset 4 (bubble)</h3>
         <canvas id="myChart4" class="grafico"></canvas>
+        <h3>dataset 4 (bubble)</h3>
+        <canvas id="myChart4b" class="grafico"></canvas>
     </main>
 
     <footer class="texto"><h4>footer</h4></footer>
@@ -218,6 +220,25 @@
                             }
                         }
                     },
+                    animation: { duration: 0 }
+                }
+            }
+        );
+
+
+
+        new Chart(document.getElementById('myChart4b'),
+            {
+                type: 'bubble',
+                data: {
+                    datasets: [
+                        {
+                            data: [{x:1,y:5,r:3},{x:2,y:8,r:5},{x:3,y:7,r:9},{x:4,y:1,r:1},{x:5,y:4,r:4},{x:6,y:5,r:7},{x:7,y:2,r:2}],
+                            backgroundColor: ['#F4CA16','#CC397B','#318CE7','#F4CA16','#CC397B','#318CE7','#50C878'],
+                        },
+                    ]
+                },
+                options: {
                     animation: { duration: 0 }
                 }
             }

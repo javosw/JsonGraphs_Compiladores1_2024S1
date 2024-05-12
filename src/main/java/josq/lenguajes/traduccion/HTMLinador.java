@@ -18,6 +18,8 @@ import josq.lenguajes.modelos.LineasXt;
 import josq.lenguajes.modelos.Par;
 import josq.lenguajes.modelos.Pastel;
 import josq.lenguajes.modelos.PastelXt;
+import josq.lenguajes.modelos.Puntos;
+import josq.lenguajes.modelos.PuntosXt;
 
 public class HTMLinador {
 
@@ -34,7 +36,8 @@ public class HTMLinador {
         miHTML.append("<meta charset=\"UTF-8\" />");
         miHTML.append(getProp(Index.KD_TITLE, props.get(Index.KD_TITLE)));
         miHTML.append("<style> ");
-        miHTML.append(".grafico { max-width:600px; max-height:660px; }");
+        //miHTML.append(".grafico { max-width:600px; max-height:660px; }");
+        miHTML.append(".grafico { max-height:660px; }");
         
         miHTML.append(".texto {");
         miHTML.append(getProp(Index.KD_FONTSIZE, props.get(Index.KD_FONTSIZE)));
@@ -81,8 +84,10 @@ public class HTMLinador {
             else if (graficos.get(i) instanceof BarrasXt) html.append(getBarrasXt("graf"+i,(BarrasXt) graficos.get(i)));
             else if (graficos.get(i) instanceof Pastel) html.append(getPastel("graf"+i,(Pastel) graficos.get(i)));
             else if (graficos.get(i) instanceof PastelXt) html.append(getPastelXt("graf"+i,(PastelXt) graficos.get(i)));
-            else if (graficos.get(i) instanceof LineasXt) html.append(getLineasXt("graf"+i,(LineasXt) graficos.get(i)));
             else if (graficos.get(i) instanceof Lineas) html.append(getLineas("graf"+i,(Lineas) graficos.get(i)));
+            else if (graficos.get(i) instanceof LineasXt) html.append(getLineasXt("graf"+i,(LineasXt) graficos.get(i)));
+            else if (graficos.get(i) instanceof Puntos) html.append(getPuntos("graf"+i,(Puntos) graficos.get(i)));
+            else if (graficos.get(i) instanceof PuntosXt) html.append(getPuntosXt("graf"+i,(PuntosXt) graficos.get(i)));
         }
         return html.toString();
     }
@@ -270,6 +275,45 @@ public class HTMLinador {
         return js.toString();
     }
 
+    private static String getPuntosXt(String id, PuntosXt miGrafico) {
+        ArrayList<PuntosXt.Data> dataList = miGrafico.getDataList();
+        Chart1 frame = miGrafico.getChart();
+
+        StringBuilder js = new StringBuilder();
+
+        js.append("new Chart(document.getElementById('"+id+"'), { type: 'bubble', data: { datasets: [ {");
+        js.append("label: '"+frame.getTitle()+"',");
+
+        StringBuilder aux1 = new StringBuilder();
+        for(PuntosXt.Data d : dataList) aux1.append("{x:"+d.getpX()+",y:"+d.getpY()+",r:"+d.getSize()+"},");
+        js.append("data: ["+aux1.toString()+"],");
+
+        StringBuilder aux2 = new StringBuilder();
+        for(PuntosXt.Data d : dataList) aux2.append(d.getColor()+",");
+        js.append("backgroundColor: ["+aux2.toString()+"], ");
+        js.append("}, ] }, options: { scales: {");
+        js.append("y: { title: { display: true, text: '"+frame.getyLabel()+"' } },");
+        js.append("x: { title: { display: true, text: '"+frame.getxLabel()+"' } }");
+        js.append("}, animation: { duration: 0 } } } );");
+
+        return js.toString();
+    }
+
+
+    private static String getPuntos(String id, Puntos miGrafico){
+        ArrayList<Puntos.Data> dataList = miGrafico.getDataList();
+
+        StringBuilder js = new StringBuilder();
+
+        js.append("new Chart(document.getElementById('"+id+"'), { type: 'bubble', data: { datasets: [ {");
+        
+        StringBuilder aux1 = new StringBuilder();
+        for(Puntos.Data d : dataList) aux1.append("{x:"+d.getpX()+",y:"+d.getpY()+"},");
+        js.append("data: ["+aux1.toString()+"],");
+        js.append("}, ] }, options: { animation: { duration: 0 } } } );");
+        
+        return js.toString();
+    }
 
     public static void writeString(String file, String txt) throws Exception
     {

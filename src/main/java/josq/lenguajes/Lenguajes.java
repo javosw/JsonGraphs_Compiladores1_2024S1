@@ -23,7 +23,7 @@ public class Lenguajes {
     
     static void leerDashb()
     {
-        String rutaIn = "C:\\DASHB\\lineas";
+        String rutaIn = "C:\\DASHB\\todas-error@props";
         
         try
         {
