@@ -9,12 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import josq.dashb.databinding.ActivityMainBinding;
-import josq.lenguajes.automatas.Automata;
+import josq.lenguajes.automatas.Automatas;
+import josq.lenguajes.automatas.Ejecucion;
+import josq.lenguajes.modelos.Dashb;
+import josq.lenguajes.traduccion.HTMLinador;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -28,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
         binding.bParse.setOnClickListener(e -> {
             try {
-                Automata.getDashbDesdeString(binding.editor.getText().toString());
-
+                Dashb miDash = Ejecucion.getDashbDesdeString(binding.editor.getText().toString());
+                String html = HTMLinador.getPage(miDash);
+                System.out.println(html);
             } catch (Exception ex) {
                 System.out.println("@setOnClickListener: "+ex.getMessage());
             }
