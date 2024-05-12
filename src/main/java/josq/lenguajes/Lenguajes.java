@@ -23,7 +23,7 @@ public class Lenguajes {
     
     static void leerDashb()
     {
-        String rutaIn = "C:\\DASHB\\barras";
+        String rutaIn = "C:\\DASHB\\lineas";
         
         try
         {

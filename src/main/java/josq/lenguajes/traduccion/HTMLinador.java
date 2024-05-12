@@ -5,12 +5,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.xml.sax.SAXException;
+
 import josq.lenguajes.modelos.Barras;
 import josq.lenguajes.modelos.BarrasXt;
 import josq.lenguajes.modelos.Chart1;
+import josq.lenguajes.modelos.Chart2;
 import josq.lenguajes.modelos.Dashb;
 import josq.lenguajes.modelos.Index;
+import josq.lenguajes.modelos.Lineas;
+import josq.lenguajes.modelos.LineasXt;
 import josq.lenguajes.modelos.Par;
+import josq.lenguajes.modelos.Pastel;
+import josq.lenguajes.modelos.PastelXt;
 
 public class HTMLinador {
 
@@ -72,6 +79,9 @@ public class HTMLinador {
         for(int i = 0; i < conteo; i = i + 1) {
             if (graficos.get(i) instanceof Barras) html.append(getBarras("graf"+i,(Barras) graficos.get(i)));
             else if (graficos.get(i) instanceof BarrasXt) html.append(getBarrasXt("graf"+i,(BarrasXt) graficos.get(i)));
+            else if (graficos.get(i) instanceof Pastel) html.append(getPastel("graf"+i,(Pastel) graficos.get(i)));
+            else if (graficos.get(i) instanceof PastelXt) html.append(getPastelXt("graf"+i,(PastelXt) graficos.get(i)));
+            else if (graficos.get(i) instanceof LineasXt) html.append(getLineasXt("graf"+i,(LineasXt) graficos.get(i)));
         }
         return html.toString();
     }
@@ -105,7 +115,28 @@ public class HTMLinador {
 
         return "";
     }
+
+    private static String getBarras(String id, Barras miGrafico)
+    {
+        ArrayList<Barras.Data> dataList = miGrafico.getDataList();
+
+        StringBuilder js = new StringBuilder();
+
+        js.append("new Chart(document.getElementById('"+id+"'), { type: 'bar',");
+        js.append("data: {");
+
+        StringBuilder categories = new StringBuilder();
+        for (Barras.Data d: dataList) categories.append(d.getCategory()+",");
+        js.append("labels: ["+categories.toString()+"],");
+
+        StringBuilder data = new StringBuilder();
+        for (Barras.Data d: dataList) data.append(d.getValue()+",");
+        js.append("datasets: [ { data: ["+data.toString()+"] } ]");
+        js.append("}, options: { animation: { duration: 0 } } });");
         
+        return js.toString();
+    }
+   
     private static String getBarrasXt(String id, BarrasXt miGrafico)
     {
         ArrayList<BarrasXt.Data> dataList = miGrafico.getDataList();
@@ -131,31 +162,87 @@ public class HTMLinador {
         js.append("}]}, options: { scales: {");
         js.append("y: { title: { display: true, text: "+xt.getyLabel()+" } },");
         js.append("x: { title: { display: true, text: "+xt.getxLabel()+" } },");
-        js.append("} } } );");
+        js.append("}, animation: { duration: 0 } } } );");
 
         return js.toString();
     }
 
-    private static String getBarras(String id, Barras miGrafico)
+    private static String getPastel(String id, Pastel miGrafico)
     {
-        ArrayList<Barras.Data> dataList = miGrafico.getDataList();
+        ArrayList<Pastel.Data> dataList = miGrafico.getDataList();
 
         StringBuilder js = new StringBuilder();
 
-        js.append("new Chart(document.getElementById('"+id+"'), { type: 'bar',");
-        js.append("data: {");
+        js.append("new Chart(document.getElementById('"+id+"'), { type: 'pie', data: {");
 
-        StringBuilder categories = new StringBuilder();
-        for (Barras.Data d: dataList) categories.append(d.getCategory()+",");
-        js.append("labels: ["+categories.toString()+"],");
+        StringBuilder labels = new StringBuilder();
+        for (Pastel.Data d: dataList) labels.append(d.getLabel()+",");
+        js.append("labels: ["+labels.toString()+"],");
 
         StringBuilder data = new StringBuilder();
-        for (Barras.Data d: dataList) data.append(d.getValue()+",");
-        js.append("datasets: [ { data: ["+data.toString()+"] } ]");
-        js.append("}});");
-        
+        for (Pastel.Data d: dataList) data.append(d.getValue()+",");
+        js.append("datasets: [ { data: ["+data.toString()+"], } ] },");
+        js.append("options: { animation: { duration: 0 } } } );");
+
         return js.toString();
     }
+
+    private static String getPastelXt(String id, PastelXt miGrafico)
+    {
+        ArrayList<PastelXt.Data> dataList = miGrafico.getDataList();
+        Chart2 frame = miGrafico.getChart();
+
+        StringBuilder js = new StringBuilder();
+
+        js.append("new Chart(document.getElementById('"+id+"'), { type: 'pie', data: {");
+
+        StringBuilder labels = new StringBuilder();
+        for (PastelXt.Data d: dataList) labels.append(d.getLabel()+",");
+        js.append("labels: ["+labels.toString()+"],");
+
+        js.append("datasets: [ { label: '"+frame.getTitle()+"',");
+
+        StringBuilder data = new StringBuilder();
+        for (PastelXt.Data d: dataList) data.append(d.getValue()+",");
+        js.append("data: ["+data.toString()+"],");
+
+        StringBuilder color = new StringBuilder();
+        for (PastelXt.Data d: dataList) color.append(d.getValue()+",");
+        js.append("backgroundColor: ["+color.toString()+"],");
+        js.append("} ] }, options: { animation: { duration: 0 } } } );");
+
+        return js.toString();
+    }
+
+    private static String getLineasXt(String id, LineasXt miGrafico)
+    {
+        ArrayList<LineasXt.Data> dataList = miGrafico.getDataList();
+        Chart1 frame = miGrafico.getChart();
+
+        StringBuilder js = new StringBuilder();
+
+        js.append("new Chart(document.getElementById('"+id+"'), { type: 'scatter', data: { datasets: [");
+        
+        StringBuilder aux1 = new StringBuilder();
+        for(LineasXt.Data d : dataList){
+            aux1.append("{ label: '"+d.getName()+"',");
+
+            ArrayList<LineasXt.Data.Punto> puntos = d.getPuntos();
+            StringBuilder aux2 = new StringBuilder();
+            for(LineasXt.Data.Punto p : puntos) aux2.append("{x:"+p.getpX()+",y:"+p.getpY()+"},");
+            aux1.append("data: ["+aux2.toString()+"],");
+            aux1.append("backgroundColor: "+d.getColor()+",");
+            aux1.append("borderColor: "+d.getColor()+",");
+            aux1.append("showLine: true },");
+        }
+        js.append(aux1.toString()+"] }, options: { scales: {");
+        js.append("y: { title: { display: true, text: '"+frame.getyLabel()+"' } },");
+        js.append("x: { title: { display: true, text: '"+frame.getxLabel()+"' } }");
+        js.append("}, animation: { duration: 0 } } } );");
+
+        return js.toString();
+    }
+
 
 
     public static void writeString(String file, String txt) throws Exception

@@ -29,6 +29,8 @@
         <canvas id="myChart1b" class="grafico"></canvas>
         <h3>dataset 2 (pie)</h3>
         <canvas id="myChart2" class="grafico"></canvas>
+        <h3>dataset 2 (pie)</h3>
+        <canvas id="myChart2b" class="grafico"></canvas>
         <h3>dataset 3 (scatter)</h3>
         <canvas id="myChart3" class="grafico"></canvas>
         <h3>dataset 4 (bubble)</h3>
@@ -91,20 +93,14 @@
             }
         );
 
-        new Chart(document.getElementById('myChart2'),
+        new Chart(document.getElementById('myChart2b'),
             {
                 type: 'pie',
                 data: {
                     labels: ['label1','label2','label3'],
                     datasets: [
                         {
-                            label: 'dataset1',
                             data: [1000,300,600],
-                            backgroundColor: [
-                                '#CC397B',
-                                '#006262',
-                                '#50C878'
-                            ],
                         }
                     ]
                 },
