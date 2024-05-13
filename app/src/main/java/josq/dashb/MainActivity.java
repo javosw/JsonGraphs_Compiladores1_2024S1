@@ -1,48 +1,100 @@
 package josq.dashb;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.apache.commons.io.IOUtils;
 
+import java.io.BufferedWriter;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
 import josq.dashb.databinding.ActivityMainBinding;
-import josq.lenguajes.automatas.Automatas;
 import josq.lenguajes.automatas.Ejecucion;
 import josq.lenguajes.modelos.Dashb;
 import josq.lenguajes.traduccion.HTMLinador;
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+    private ActivityMainBinding miBinding;
+    private String miHTML;
 
+    private void writeText(Uri miUri, String miString) {
+        try {
+            OutputStream miStream = getContentResolver().openOutputStream(miUri);
+            BufferedWriter miWriter = new BufferedWriter(new OutputStreamWriter(miStream));
+            miWriter.write(miString);
+            miWriter.flush();
+            miWriter.close();
+        }
+        catch (Exception e) { Toast.makeText(this.getApplicationContext(), e.getMessage(),Toast.LENGTH_SHORT).show(); }
+    }
+
+    private String readText(Uri miUri) {
+        try {
+            InputStream myStream = getContentResolver().openInputStream(miUri);
+            return IOUtils.toString(myStream, StandardCharsets.UTF_8);
+        }
+        catch(Exception e){
+            Toast.makeText(this.getApplicationContext(), e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+        return "";
+    }
+
+    private final int INTENT_OPEN = 1;
+    private final int INTENT_SAVE = 2;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if(resultData != null && resultData.getData() == null) {
+            Toast.makeText(this, "ACCION NO REALIZABLE",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(requestCode == INTENT_OPEN) miBinding.editor.setText(readText(resultData.getData()));
+        else if (requestCode == INTENT_SAVE) writeText(resultData.getData(), miHTML);
+
+        super.onActivityResult(requestCode, resultCode, resultData);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        miBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(miBinding.getRoot());
 
-        binding.bParse.setOnClickListener(e -> {
+        miBinding.bParse.setOnClickListener(e -> {
             try {
-                Dashb miDash = Ejecucion.getDashbDesdeString(binding.editor.getText().toString());
-                String html = HTMLinador.getPage(miDash);
-                System.out.println(html);
-            } catch (Exception ex) {
-                System.out.println("@setOnClickListener: "+ex.getMessage());
-            }
-        });
+                miHTML = "";
+                Dashb miDash = Ejecucion.getDashbDesdeString(miBinding.editor.getText().toString());
+                miHTML = HTMLinador.getPage(miDash);
+                System.out.println("\n\nPARSERADO\n\n");
 
-        binding.graficos.setOnLongClickListener(myView -> {
+                Intent miIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                miIntent.setType("*/*");
+                miIntent.putExtra(Intent.EXTRA_TITLE, "MisGraficos.html");
+
+                startActivityForResult(miIntent, INTENT_SAVE);
+            } catch (Exception ex) { System.out.println(ex.getMessage()); }
+        });
+        miBinding.graficos.setOnLongClickListener(myView -> {
             showPopUpMenu(myView);
             return true;
         });
+        miBinding.bOpen.setOnClickListener(e -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            startActivityForResult(intent, INTENT_OPEN);
+        });
     }
+
     private void showPopUpMenu(View myView)
     {
         PopupMenu myMenu = new PopupMenu(this, myView);
@@ -77,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             assert myStream != null;
             String myString = IOUtils.toString(myStream, StandardCharsets.UTF_8);
-            binding.editor.setText(myString);
+            miBinding.editor.setText(myString);
             return true;
         }
         catch (Exception e) {
@@ -86,6 +138,4 @@ public class MainActivity extends AppCompatActivity {
 
         return false;
     }
-
-
 }

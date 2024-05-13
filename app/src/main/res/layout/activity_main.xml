@@ -42,6 +42,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="GENERAR" />
+        <Button
+            android:id="@+id/b_open"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ABRIR" />
+        <Button
+            android:id="@+id/b_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GUARDAR" />
 
     </LinearLayout>
 
