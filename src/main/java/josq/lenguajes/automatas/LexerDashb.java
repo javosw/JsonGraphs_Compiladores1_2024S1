@@ -689,7 +689,7 @@ public class LexerDashb implements java_cup.runtime.Scanner {
     private DefaultSymbolFactory myFactory = null;
 
     private Symbol symbol(int sym) {
-        printLexema(sym); // DEBUG
+        //printLexema(sym); // DEBUG
         int izq = (int)yychar+1;
         int der = (int)yychar+yylength();
         String name = ParserDashbSym.terminalNames[sym];
@@ -697,7 +697,7 @@ public class LexerDashb implements java_cup.runtime.Scanner {
         return mySymbol;
     }
     private Symbol symbol(int sym, Object val) {
-        printLexema(sym); // DEBUG
+        //printLexema(sym); // DEBUG
         int izq = (int)yychar+1;
         int der = (int)yychar+yylength();
         String name = ParserDashbSym.terminalNames[sym];
@@ -730,13 +730,13 @@ public class LexerDashb implements java_cup.runtime.Scanner {
     }
 
     // para errores lexicos
-    private StringBuilder log = new StringBuilder();
-    private StringBuilder log(String text) { return log.append(text); }
+    private StringBuilder log(String mensaje) { return Registros.sintactico.append(mensaje); }
 
     // para debug
     private void print(String texto){ System.out.print(texto); } 
     public Punto puntoActual(){ return new Punto((yychar+1),yylength(),(yyline+1),(yycolumn+1)); };
     private void printLexema(int sym) { print(ParserDashbSym.terminalNames[sym]+" ("+yytext()+"): "+puntoActual().getValues()+"\n"); }
+
 
     /*
     ComplexSymbolFactory myFactory = null;
@@ -1183,7 +1183,7 @@ public class LexerDashb implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1:
-            { //print("@error: "+yytext()+","+puntoActual().getValues()+"\n");
+            { log("@lexer[ "+yytext()+" ] "+puntoActual().getValues()+"\n");
     return symbol(ParserDashbSym.error);
             }
           // fall through

@@ -33,6 +33,10 @@ action code {:
         print("@expected: "+idsName.toString()+"\n");
         print("_<\n");
     }
+
+    StringBuilder log(String mensaje) {
+        return Registros.sintactico.append(mensaje);
+    }
 :}
 
 // #%#%#%#% SIMBOLOS #%#%#%#%
@@ -190,10 +194,10 @@ property ::=
     | backgr:w1      {: RESULT= new Par(Index.KD_BACKGR,w1); :}
     | fontFam:w1     {: RESULT= new Par(Index.KD_FONTFAM,w1); :}
     | fontSize:w1    {: RESULT= new Par(Index.KD_FONTSIZE,w1); :}
-    | error:w1 MI_TEXTO:w2 {: RESULT=null; print("\n@parser:property1 "+w1left+"-"+w2right+"\n\n"); :}
-    | error:w1 MI_COLOR:w2 {: RESULT=null; print("\n@parser:property2 "+w1left+"-"+w2right+"\n\n"); :}
-    | error:w1 DERCORCH:w2 {: RESULT=null; print("\n@parser:property3 "+w1left+"-"+w2right+"\n\n"); :}
-    | error:w1 DERLLAVE:w2 {: RESULT=null; print("\n@parser:property4 "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 MI_TEXTO:w2 {: RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 MI_COLOR:w2 {: RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 DERCORCH:w2 {: RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 DERLLAVE:w2 {: RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
 ;
 
 // GRAFICOS >>>>>>>>>>>>>>>>>>>
@@ -212,7 +216,7 @@ grafico ::=
     | lineasXt:w1  {: RESULT=w1; :}
     | tarjeta:w1   {: RESULT=w1; :}
     | tarjetaXt:w1 {: RESULT=w1; :}
-    | IZQLLAVE:w1 error:w2 DERLLAVE:w3 {: RESULT=null; print("\n@parser:grafico "+w1left+"-"+w3right+"\n\n"); :}
+    | IZQLLAVE:w1 error:w2 DERLLAVE:w3 {: RESULT=null; log("\n@parser[ grafico ] "+w1left+"-"+w3right+"\n\n"); :}
 ;
 
 // BARRAS >>>>>>>>>>>>>>>>>>>

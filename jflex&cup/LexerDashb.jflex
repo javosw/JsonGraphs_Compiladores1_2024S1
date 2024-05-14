@@ -18,7 +18,7 @@ import java_cup.runtime.DefaultSymbolFactory;
 
 // configuracion de jflex
 //%debug
-%16bit
+//%16bit
 // configuracion de la clase lexer
 %class LexerDashb
 %public
@@ -36,7 +36,7 @@ import java_cup.runtime.DefaultSymbolFactory;
     private DefaultSymbolFactory myFactory = null;
 
     private Symbol symbol(int sym) {
-        printLexema(sym); // DEBUG
+        //printLexema(sym); // DEBUG
         int izq = (int)yychar+1;
         int der = (int)yychar+yylength();
         String name = ParserDashbSym.terminalNames[sym];
@@ -44,7 +44,7 @@ import java_cup.runtime.DefaultSymbolFactory;
         return mySymbol;
     }
     private Symbol symbol(int sym, Object val) {
-        printLexema(sym); // DEBUG
+        //printLexema(sym); // DEBUG
         int izq = (int)yychar+1;
         int der = (int)yychar+yylength();
         String name = ParserDashbSym.terminalNames[sym];
@@ -77,13 +77,13 @@ import java_cup.runtime.DefaultSymbolFactory;
     }
 
     // para errores lexicos
-    private StringBuilder log = new StringBuilder();
-    private StringBuilder log(String text) { return log.append(text); }
+    private StringBuilder log(String mensaje) { return Registros.sintactico.append(mensaje); }
 
     // para debug
     private void print(String texto){ System.out.print(texto); } 
     public Punto puntoActual(){ return new Punto((yychar+1),yylength(),(yyline+1),(yycolumn+1)); };
     private void printLexema(int sym) { print(ParserDashbSym.terminalNames[sym]+" ("+yytext()+"): "+puntoActual().getValues()+"\n"); }
+
 
     /*
     ComplexSymbolFactory myFactory = null;
@@ -213,7 +213,7 @@ backgroundColor = \"{__}*"backgroundColor"{__}*\"{__}*\:
 {__}+ {}
 // error
 [^]  {
-    //print("@error: "+yytext()+","+puntoActual().getValues()+"\n");
+    log("@lexer[ "+yytext()+" ] "+puntoActual().getValues()+"\n");
     return symbol(ParserDashbSym.error);
 }
 

@@ -907,6 +907,10 @@ class CUP$ParserDashb$actions {
         print("_<\n");
     }
 
+    StringBuilder log(String mensaje) {
+        return Registros.sintactico.append(mensaje);
+    }
+
   private final ParserDashb parser;
 
   /** Constructor */
@@ -1252,7 +1256,7 @@ class CUP$ParserDashb$actions {
 		int w2left = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).left;
 		int w2right = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).right;
 		String w2 = (String)((java_cup.runtime.Symbol) CUP$ParserDashb$stack.peek()).value;
-		 RESULT=null; print("\n@parser:property1 "+w1left+"-"+w2right+"\n\n"); 
+		 RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); 
               CUP$ParserDashb$result = parser.getSymbolFactory().newSymbol("property",4, ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.elementAt(CUP$ParserDashb$top-1)), ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()), RESULT);
             }
           return CUP$ParserDashb$result;
@@ -1267,7 +1271,7 @@ class CUP$ParserDashb$actions {
 		int w2left = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).left;
 		int w2right = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).right;
 		String w2 = (String)((java_cup.runtime.Symbol) CUP$ParserDashb$stack.peek()).value;
-		 RESULT=null; print("\n@parser:property2 "+w1left+"-"+w2right+"\n\n"); 
+		 RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); 
               CUP$ParserDashb$result = parser.getSymbolFactory().newSymbol("property",4, ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.elementAt(CUP$ParserDashb$top-1)), ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()), RESULT);
             }
           return CUP$ParserDashb$result;
@@ -1282,7 +1286,7 @@ class CUP$ParserDashb$actions {
 		int w2left = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).left;
 		int w2right = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).right;
 		Object w2 = (Object)((java_cup.runtime.Symbol) CUP$ParserDashb$stack.peek()).value;
-		 RESULT=null; print("\n@parser:property3 "+w1left+"-"+w2right+"\n\n"); 
+		 RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); 
               CUP$ParserDashb$result = parser.getSymbolFactory().newSymbol("property",4, ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.elementAt(CUP$ParserDashb$top-1)), ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()), RESULT);
             }
           return CUP$ParserDashb$result;
@@ -1297,7 +1301,7 @@ class CUP$ParserDashb$actions {
 		int w2left = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).left;
 		int w2right = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).right;
 		Object w2 = (Object)((java_cup.runtime.Symbol) CUP$ParserDashb$stack.peek()).value;
-		 RESULT=null; print("\n@parser:property4 "+w1left+"-"+w2right+"\n\n"); 
+		 RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); 
               CUP$ParserDashb$result = parser.getSymbolFactory().newSymbol("property",4, ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.elementAt(CUP$ParserDashb$top-1)), ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()), RESULT);
             }
           return CUP$ParserDashb$result;
@@ -1462,7 +1466,7 @@ class CUP$ParserDashb$actions {
 		int w3left = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).left;
 		int w3right = ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()).right;
 		Object w3 = (Object)((java_cup.runtime.Symbol) CUP$ParserDashb$stack.peek()).value;
-		 RESULT=null; print("\n@parser:grafico "+w1left+"-"+w3right+"\n\n"); 
+		 RESULT=null; log("\n@parser[ grafico ] "+w1left+"-"+w3right+"\n\n"); 
               CUP$ParserDashb$result = parser.getSymbolFactory().newSymbol("grafico",7, ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.elementAt(CUP$ParserDashb$top-2)), ((java_cup.runtime.Symbol)CUP$ParserDashb$stack.peek()), RESULT);
             }
           return CUP$ParserDashb$result;

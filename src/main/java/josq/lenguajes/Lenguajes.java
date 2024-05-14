@@ -7,6 +7,7 @@ package josq.lenguajes;
 import java.util.ArrayList;
 
 import josq.lenguajes.automatas.Ejecucion;
+import josq.lenguajes.automatas.Registros;
 import josq.lenguajes.modelos.Dashb;
 import josq.lenguajes.modelos.Par;
 import josq.lenguajes.traduccion.HTMLinador;
@@ -21,19 +22,17 @@ public class Lenguajes {
         leerDashb();
     }
     
-    static void leerDashb()
-    {
-        String rutaIn = "C:\\DASHB\\todas-error@props";
-        
-        try
-        {
+    static void leerDashb() {
+        String rutaIn = "C:\\DASHB\\todas&error@grafs";
+        String rutaOut = "C:\\Users\\JavierOswaldo\\Desktop\\MIPAGINA.html";
+
+        try {
             Dashb miDash = Ejecucion.getDashbDesdeArchivo(rutaIn);
+            System.out.println("\n"+Registros.sintactico.toString());
             String page = HTMLinador.getPage(miDash);
-            String rutaOut = "C:\\Users\\JavierOswaldo\\Desktop\\MIPAGINA.html";
             HTMLinador.writeString(rutaOut, page);
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             System.out.println("@leer:" + ex.getMessage());
             ex.printStackTrace();
         }
