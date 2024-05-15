@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.xml.sax.SAXException;
 
+import josq.lenguajes.automatas.Registros;
 import josq.lenguajes.modelos.Barras;
 import josq.lenguajes.modelos.BarrasXt;
 import josq.lenguajes.modelos.Chart1;
@@ -80,14 +81,38 @@ public class HTMLinador {
         int conteo = graficos.size();
 
         for(int i = 0; i < conteo; i = i + 1) {
-            if (graficos.get(i) instanceof Barras) html.append(getBarras("graf"+i,(Barras) graficos.get(i)));
-            else if (graficos.get(i) instanceof BarrasXt) html.append(getBarrasXt("graf"+i,(BarrasXt) graficos.get(i)));
-            else if (graficos.get(i) instanceof Pastel) html.append(getPastel("graf"+i,(Pastel) graficos.get(i)));
-            else if (graficos.get(i) instanceof PastelXt) html.append(getPastelXt("graf"+i,(PastelXt) graficos.get(i)));
-            else if (graficos.get(i) instanceof Lineas) html.append(getLineas("graf"+i,(Lineas) graficos.get(i)));
-            else if (graficos.get(i) instanceof LineasXt) html.append(getLineasXt("graf"+i,(LineasXt) graficos.get(i)));
-            else if (graficos.get(i) instanceof Puntos) html.append(getPuntos("graf"+i,(Puntos) graficos.get(i)));
-            else if (graficos.get(i) instanceof PuntosXt) html.append(getPuntosXt("graf"+i,(PuntosXt) graficos.get(i)));
+            if (graficos.get(i) instanceof Barras) { 
+                html.append(getBarras("graf"+i,(Barras) graficos.get(i)));
+                Registros.semantico.append("@hmtl[ nuevo barras ]\n");
+            }
+            else if (graficos.get(i) instanceof BarrasXt) { 
+                html.append(getBarrasXt("graf"+i,(BarrasXt) graficos.get(i)));
+                Registros.semantico.append("@hmtl[ nuevo barrasXt ]\n");
+            }     
+            else if (graficos.get(i) instanceof Pastel)   { 
+                html.append(getPastel("graf"+i,(Pastel) graficos.get(i)));
+                Registros.semantico.append("@hmtl[ nuevo pastel ]\n");
+            } 
+            else if (graficos.get(i) instanceof PastelXt) { 
+                html.append(getPastelXt("graf"+i,(PastelXt) graficos.get(i)));
+                Registros.semantico.append("@hmtl[ nuevo pastelXt ]\n");
+            }
+            else if (graficos.get(i) instanceof Lineas)   { 
+                html.append(getLineas("graf"+i,(Lineas) graficos.get(i)));
+                Registros.semantico.append("@hmtl[ nuevo lineas ]\n");
+            } 
+            else if (graficos.get(i) instanceof LineasXt) { 
+                html.append(getLineasXt("graf"+i,(LineasXt) graficos.get(i)));
+                Registros.semantico.append("@hmtl[ nuevo lineasXt ]\n");
+            }     
+            else if (graficos.get(i) instanceof Puntos)   { 
+                html.append(getPuntos("graf"+i,(Puntos) graficos.get(i)));
+                Registros.semantico.append("@hmtl[ nuevo puntos ]\n");
+            } 
+            else if (graficos.get(i) instanceof PuntosXt) { 
+                html.append(getPuntosXt("graf"+i,(PuntosXt) graficos.get(i)));
+                Registros.semantico.append("@hmtl[ nuevo puntosXt ]\n");
+            }
         }
         return html.toString();
     }

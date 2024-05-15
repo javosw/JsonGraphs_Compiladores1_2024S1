@@ -20,23 +20,12 @@ import java.nio.charset.StandardCharsets;
 
 import josq.dashb.databinding.ActivityMainBinding;
 import josq.lenguajes.automatas.Ejecucion;
+import josq.lenguajes.automatas.Registros;
 import josq.lenguajes.modelos.Dashb;
 import josq.lenguajes.traduccion.HTMLinador;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding miBinding;
-    private String miHTML;
-
-    private void writeText(Uri miUri, String miString) {
-        try {
-            OutputStream miStream = getContentResolver().openOutputStream(miUri);
-            BufferedWriter miWriter = new BufferedWriter(new OutputStreamWriter(miStream));
-            miWriter.write(miString);
-            miWriter.flush();
-            miWriter.close();
-        }
-        catch (Exception e) { Toast.makeText(this.getApplicationContext(), e.getMessage(),Toast.LENGTH_SHORT).show(); }
-    }
 
     private String readText(Uri miUri) {
         try {
@@ -50,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private final int INTENT_OPEN = 1;
-    private final int INTENT_SAVE = 2;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if(resultData != null && resultData.getData() == null) {
@@ -58,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if(requestCode == INTENT_OPEN) miBinding.editor.setText(readText(resultData.getData()));
-        else if (requestCode == INTENT_SAVE) writeText(resultData.getData(), miHTML);
+        if (requestCode == INTENT_OPEN) miBinding.editor.setText(readText(resultData.getData()));
 
         super.onActivityResult(requestCode, resultCode, resultData);
     }
@@ -72,17 +59,14 @@ public class MainActivity extends AppCompatActivity {
 
         miBinding.bParse.setOnClickListener(e -> {
             try {
-                miHTML = "";
+                Registros.clearRegistros();
                 Dashb miDash = Ejecucion.getDashbDesdeString(miBinding.editor.getText().toString());
-                miHTML = HTMLinador.getPage(miDash);
-                System.out.println("\n\nPARSERADO\n\n");
+                Registros.html.append(HTMLinador.getPage(miDash));
 
-                Intent miIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                miIntent.setType("*/*");
-                miIntent.putExtra(Intent.EXTRA_TITLE, "MisGraficos.html");
-
-                startActivityForResult(miIntent, INTENT_SAVE);
-            } catch (Exception ex) { System.out.println(ex.getMessage()); }
+                Intent miIntent = new Intent(MainActivity.this, Resultados.class);
+                startActivity(miIntent);
+            }
+            catch (Exception ex) { System.out.println(ex.getMessage()); }
         });
         miBinding.graficos.setOnLongClickListener(myView -> {
             showPopUpMenu(myView);
