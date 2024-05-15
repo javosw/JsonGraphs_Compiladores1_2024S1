@@ -7,11 +7,13 @@ public class Permutations<T> {
 
     private void helper(T[] array, int pos) {
         if (pos >= array.length - 1) {
-            System.out.print("[");
-            for (int i = 0; i < array.length - 1; i++) System.out.print(array[i] + ", ");
+            //System.out.print("[");
+            System.out.print("IZQLLAVE ");
+            for (int i = 0; i < array.length - 1; i++) System.out.print(array[i] + " COMA ");
             if (array.length > 0) System.out.print(array[array.length - 1]);
 
-            System.out.println("]");
+            //System.out.println("]");
+            System.out.println(" DERLLAVE");
             return;
         }
 
@@ -30,7 +32,7 @@ public class Permutations<T> {
     }
 
     public static void main(String args[]) {
-        String[] cadenas = {"category:w1", "value:w2", "color:w3"};
+        String[] cadenas = {"xValue:w1", "yValue:w2", "label:w3"};
         // 
         Permutations<String> myPerm = new Permutations<>();
         myPerm.getAll(cadenas);

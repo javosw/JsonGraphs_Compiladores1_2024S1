@@ -126,8 +126,8 @@ __   =  {_v}|{_h}
 // áÁéÉíÍóÓúÚñÑ
 // \341\301\351\311\355\315\363\323\372\332\361\321
 // \u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1\u00A9
-miChar = [0-9a-zA-Z\,\.\-\_áÁéÉíÍóÓúÚñÑ©]
-//miChar = [0-9a-zA-Z\,\.\-\_\u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1\u00A9]
+//miChar = [0-9a-zA-Z\,\.\-\_áÁéÉíÍóÓúÚñÑ©]
+miChar = [0-9a-zA-Z\,\.\-\_\u00E1\u00C1\u00E9\u00C9\u00ED\u00CD\u00F3\u00D3\u00FA\u00DA\u00F1\u00D1\u00A9]
 miTexto = \"({__}|{miChar})+\"
 //miTextoXt
 //miURL

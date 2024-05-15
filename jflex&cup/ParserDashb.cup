@@ -194,10 +194,10 @@ property ::=
     | backgr:w1      {: RESULT= new Par(Index.KD_BACKGR,w1); :}
     | fontFam:w1     {: RESULT= new Par(Index.KD_FONTFAM,w1); :}
     | fontSize:w1    {: RESULT= new Par(Index.KD_FONTSIZE,w1); :}
-    | error:w1 MI_TEXTO:w2 {: RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
-    | error:w1 MI_COLOR:w2 {: RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
-    | error:w1 DERCORCH:w2 {: RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
-    | error:w1 DERLLAVE:w2 {: RESULT=null; log("\n@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 MI_TEXTO:w2 {: RESULT=null; log("@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 MI_COLOR:w2 {: RESULT=null; log("@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 DERCORCH:w2 {: RESULT=null; log("@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
+    | error:w1 DERLLAVE:w2 {: RESULT=null; log("@parser[ property ] "+w1left+"-"+w2right+"\n\n"); :}
 ;
 
 // GRAFICOS >>>>>>>>>>>>>>>>>>>
@@ -216,7 +216,7 @@ grafico ::=
     | lineasXt:w1  {: RESULT=w1; :}
     | tarjeta:w1   {: RESULT=w1; :}
     | tarjetaXt:w1 {: RESULT=w1; :}
-    | IZQLLAVE:w1 error:w2 DERLLAVE:w3 {: RESULT=null; log("\n@parser[ grafico ] "+w1left+"-"+w3right+"\n\n"); :}
+    | IZQLLAVE:w1 error:w2 DERLLAVE:w3 {: RESULT=null; log("@parser[ grafico ] "+w1left+"-"+w3right+"\n\n"); :}
 ;
 
 // BARRAS >>>>>>>>>>>>>>>>>>>
@@ -445,8 +445,7 @@ tarjetaXt ::= IZQLLAVE KD_DATA IZQLLAVE tarjetaXtData:w1 DERLLAVE DERLLAVE {: RE
 ;
 tarjetaXtData ::= 
     value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 COMA color:w5 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
-    /*
-    | value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
+    /*| value:w1 COMA label:w2 COMA description:w3 COMA icon:w4 COMA link:w6 COMA color:w5 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
     | value:w1 COMA label:w2 COMA description:w3 COMA color:w5 COMA icon:w4 COMA link:w6 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
     | value:w1 COMA label:w2 COMA description:w3 COMA color:w5 COMA link:w6 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
     | value:w1 COMA label:w2 COMA description:w3 COMA link:w6 COMA color:w5 COMA icon:w4 {: RESULT= new TarjetaXt(w1,w2,w3,w4,w5,w6); :}
@@ -1254,9 +1253,17 @@ size ::= KD_SIZE MI_INTEGER:w1 {: RESULT=w1; :}
 ;
 
 // KD_CHART = "chart":
-chart ::= KD_CHART IZQLLAVE title:w1 COMA xLabel:w2 COMA yLabel:w3 DERLLAVE {: RESULT= new Chart1(w1,w2,w3); :}
+chart ::= 
+    KD_CHART IZQLLAVE title:w1 COMA xLabel:w2 COMA yLabel:w3 DERLLAVE {: RESULT= new Chart1(w1,w2,w3); :}
+    | KD_CHART IZQLLAVE title:w1 COMA yLabel:w3 COMA xLabel:w2 DERLLAVE {: RESULT= new Chart1(w1,w2,w3); :}
+    | KD_CHART IZQLLAVE xLabel:w2 COMA title:w1 COMA yLabel:w3 DERLLAVE {: RESULT= new Chart1(w1,w2,w3); :}
+    | KD_CHART IZQLLAVE xLabel:w2 COMA yLabel:w3 COMA title:w1 DERLLAVE {: RESULT= new Chart1(w1,w2,w3); :}
+    | KD_CHART IZQLLAVE yLabel:w3 COMA xLabel:w2 COMA title:w1 DERLLAVE {: RESULT= new Chart1(w1,w2,w3); :}
+    | KD_CHART IZQLLAVE yLabel:w3 COMA title:w1 COMA xLabel:w2 DERLLAVE {: RESULT= new Chart1(w1,w2,w3); :}
 ;
-pastelXtChart ::= KD_CHART IZQLLAVE title:w1 COMA legend:w2 DERLLAVE {: RESULT= new Chart2(w1,w2); :}
+pastelXtChart ::= 
+    KD_CHART IZQLLAVE title:w1 COMA legend:w2 DERLLAVE {: RESULT= new Chart2(w1,w2); :}
+    | KD_CHART IZQLLAVE legend:w2 COMA title:w1 DERLLAVE {: RESULT= new Chart2(w1,w2); :}
 ;
 
 // usado en properties
@@ -1268,10 +1275,12 @@ keywordList ::=
     /* epsilon */ {: ArrayList<String> list = new ArrayList<>(); RESULT=list; :}
     | MI_TEXTO:w1 {: ArrayList<String> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
     | keywordList2:w1 MI_TEXTO:w2 {: w1.add(w2); RESULT=w1; :}
+    | keywordList2:w1 error:w2 {: RESULT=w1; :}
 ;
 keywordList2 ::=
     MI_TEXTO:w1 COMA {: ArrayList<String> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
     | keywordList2:w1 MI_TEXTO:w2 COMA {: w1.add(w2); RESULT=w1; :}
+    | keywordList2:w1 error:w2 COMA {: RESULT=w1; :}
 ;
 
 // usado en lineas
@@ -1279,26 +1288,34 @@ keywordList2 ::=
 points ::= KD_PONTS IZQCORCH pointList:w1 DERCORCH {: RESULT=w1; :}
 ;
 pointList ::= 
-    pointValue:w1 {: ArrayList<Lineas.Data.Punto> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | pointList2:w1 pointValue:w2 {: w1.add(w2); RESULT=w1; :}
+    pointValue:w1 {: ArrayList<Lineas.Data.Punto> list = new ArrayList<>(); if(w1!=null) list.add(w1); RESULT=list; :}
+    | pointList2:w1 pointValue:w2 {: if(w2!=null) w1.add(w2); RESULT=w1; :}
 ;
 pointList2 ::=
-    pointValue:w1 COMA {: ArrayList<Lineas.Data.Punto> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | pointList2:w1 pointValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
+    pointValue:w1 COMA {: ArrayList<Lineas.Data.Punto> list = new ArrayList<>(); if(w1!=null) list.add(w1); RESULT=list; :}
+    | pointList2:w1 pointValue:w2 COMA {: if(w2!=null) w1.add(w2); RESULT=w1; :}
 ;
-pointValue ::= IZQLLAVE xValue:w1 COMA yValue:w2 DERLLAVE {: RESULT= new Lineas.Data.Punto(w1,w2); :}
+pointValue ::= 
+    IZQLLAVE xValue:w1 COMA yValue:w2 DERLLAVE {: RESULT= new Lineas.Data.Punto(w1,w2); :}
+    | IZQLLAVE yValue:w2 COMA xValue:w1 DERLLAVE {: RESULT= new Lineas.Data.Punto(w1,w2); :}
 ;
 
 // usado en lineasXt
 pointsXt ::= KD_PONTS IZQCORCH pointXtList:w1 DERCORCH {: RESULT=w1; :}
 ;
 pointXtList ::= 
-    pointXtValue:w1 {: ArrayList<LineasXt.Data.Punto> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | pointXtList2:w1 pointXtValue:w2 {: w1.add(w2); RESULT=w1; :}
+    pointXtValue:w1 {: ArrayList<LineasXt.Data.Punto> list = new ArrayList<>(); if(w1!=null) list.add(w1); RESULT=list; :}
+    | pointXtList2:w1 pointXtValue:w2 {: if(w2!=null) w1.add(w2); RESULT=w1; :}
 ;
 pointXtList2 ::=
-    pointXtValue:w1 COMA {: ArrayList<LineasXt.Data.Punto> list = new ArrayList<>(); list.add(w1); RESULT=list; :}
-    | pointXtList2:w1 pointXtValue:w2 COMA {: w1.add(w2); RESULT=w1; :}
+    pointXtValue:w1 COMA {: ArrayList<LineasXt.Data.Punto> list = new ArrayList<>(); if(w1!=null) list.add(w1); RESULT=list; :}
+    | pointXtList2:w1 pointXtValue:w2 COMA {: if(w2!=null) w1.add(w2); RESULT=w1; :}
 ;
-pointXtValue ::= IZQLLAVE xValue:w1 COMA yValue:w2 COMA label:w3 DERLLAVE {: RESULT= new LineasXt.Data.Punto(w1,w2,w3); :}
+pointXtValue ::=     
+    IZQLLAVE xValue:w1 COMA yValue:w2 COMA label:w3 DERLLAVE {: RESULT= new LineasXt.Data.Punto(w1,w2,w3); :}
+    | IZQLLAVE xValue:w1 COMA label:w3 COMA yValue:w2 DERLLAVE {: RESULT= new LineasXt.Data.Punto(w1,w2,w3); :}
+    | IZQLLAVE yValue:w2 COMA xValue:w1 COMA label:w3 DERLLAVE {: RESULT= new LineasXt.Data.Punto(w1,w2,w3); :}
+    | IZQLLAVE yValue:w2 COMA label:w3 COMA xValue:w1 DERLLAVE {: RESULT= new LineasXt.Data.Punto(w1,w2,w3); :}
+    | IZQLLAVE label:w3 COMA yValue:w2 COMA xValue:w1 DERLLAVE {: RESULT= new LineasXt.Data.Punto(w1,w2,w3); :}
+    | IZQLLAVE label:w3 COMA xValue:w1 COMA yValue:w2 DERLLAVE {: RESULT= new LineasXt.Data.Punto(w1,w2,w3); :}
 ;

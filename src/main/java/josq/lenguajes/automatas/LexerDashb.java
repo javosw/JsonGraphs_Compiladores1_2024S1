@@ -46,7 +46,7 @@ public class LexerDashb implements java_cup.runtime.Scanner {
   private static final int [] ZZ_CMAP_TOP = zzUnpackcmap_top();
 
   private static final String ZZ_CMAP_TOP_PACKED_0 =
-    "\1\0\1\u0100\36\u0200\1\u0300\336\u0200\1\u0400\u1000\u0200";
+    "\1\0\u10ff\u0100";
 
   private static int [] zzUnpackcmap_top() {
     int [] result = new int[4352];
@@ -82,13 +82,13 @@ public class LexerDashb implements java_cup.runtime.Scanner {
     "\1\25\1\26\1\27\1\30\1\31\1\32\1\33\1\5"+
     "\1\34\1\35\1\36\1\37\1\40\1\41\1\5\1\42"+
     "\1\43\1\44\1\45\1\46\1\47\1\50\1\51\1\52"+
-    "\1\53\1\0\1\54\43\0\1\55\7\0\1\55\3\0"+
-    "\1\55\3\0\1\55\1\0\1\55\6\0\1\55\7\0"+
-    "\2\55\235\0\1\55\u01b6\0\1\55\3\0\1\55\23\0"+
-    "\1\55\u01cc\0\1\55\2\0";
+    "\1\53\1\0\1\54\53\0\1\55\27\0\1\55\7\0"+
+    "\1\55\3\0\1\55\3\0\1\55\1\0\1\55\6\0"+
+    "\1\55\6\0\1\55\7\0\1\55\3\0\1\55\3\0"+
+    "\1\55\1\0\1\55\6\0\1\55\u0105\0";
 
   private static int [] zzUnpackcmap_blocks() {
-    int [] result = new int[1280];
+    int [] result = new int[512];
     int offset = 0;
     offset = zzUnpackcmap_blocks(ZZ_CMAP_BLOCKS_PACKED_0, offset, result);
     return result;
